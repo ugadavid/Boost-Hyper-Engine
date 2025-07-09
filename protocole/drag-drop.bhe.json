@@ -1,0 +1,32 @@
+{
+    "type": "drag-drop",
+    "title": "Reorder the Sentence",
+    "instructions": "Put the words in the correct order to form a sentence.",
+    "data": {
+        "targets": [
+            { "id": "t1", "label": "1" },
+            { "id": "t2", "label": "2" },
+            { "id": "t3", "label": "3" },
+            { "id": "t4", "label": "4" }
+        ],
+        "items": [
+            { "id": "i1", "label": "lives", "target": "t3" },
+            { "id": "i2", "label": "in", "target": "t2" },
+            { "id": "i3", "label": "She", "target": "t1" },
+            { "id": "i4", "label": "Paris", "target": "t4" }
+        ],
+        "shuffle": true,
+        "layout": "horizontal"
+    },
+    "feedback": {
+        "correct": "Perfect order!",
+        "partial": "You're almost there.",
+        "wrong": "Try again."
+    },
+    "meta": {
+        "author": "David Subileau",
+        "created": "2025-07-09",
+        "tags": ["grammar", "syntax", "word order"],
+        "level": "A2"
+    }
+}

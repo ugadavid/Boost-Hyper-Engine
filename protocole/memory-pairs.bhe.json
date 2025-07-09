@@ -1,0 +1,27 @@
+{
+    "type": "memory-pairs",
+    "title": "Match the Words",
+    "instructions": "Click on two cards to find the matching pairs.",
+    "data": {
+        "pairs": [
+            { "id": "p1", "front": "Dog", "back": "🐶" },
+            { "id": "p2", "front": "Sun", "back": "☀️" },
+            { "id": "p3", "front": "Tree", "back": "🌳" },
+            { "id": "p4", "front": "Heart", "back": "❤️" }
+        ],
+        "shuffle": true,
+        "layout": "4x2"
+    },
+    "feedback": {
+        "correct": "Well done!",
+        "partial": "You're on the right track!",
+        "wrong": "Oops! Try again."
+    },
+    "meta": {
+        "author": "David Subileau",
+        "created": "2025-07-09",
+        "tags": ["vocabulary", "matching", "visual"],
+        "level": "A1"
+    }
+}
+
