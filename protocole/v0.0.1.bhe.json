@@ -1,0 +1,42 @@
+{
+    "type": "fill-in-the-blanks",
+    "title": "The Magic Forest",
+    "instructions": "Complete the text with the correct words.",
+    "content": "Once upon a time, there was a __ who lived in a __.",
+    "blanks": ["wizard", "tree"],
+    "feedback": {
+        "correct": "Great job! You entered all the right words.",
+        "partial": "Some answers are correct. Keep trying!",
+        "wrong": "Try again, or click to reveal the solution."
+    },
+    "meta": {
+        "author": "David Subileau",
+        "created": "2025-07-09",
+        "tags": ["vocabulary", "past simple"],
+        "level": "A2"
+    },
+
+    "components": [
+        {
+            "type": "audio",
+            "src": "wizard-sound.mp3",
+            "position": "above"
+        },
+        {
+            "type": "image",
+            "src": "forest.jpg",
+            "alt": "A dark enchanted forest",
+            "position": "inline"
+        }
+    ],
+
+    "logic": {
+        "if_score_above": 80,
+        "then": {
+            "show": "badge",
+            "message": "You've unlocked the Wizard Hat!"
+        }
+    }
+
+
+}
