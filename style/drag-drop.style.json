@@ -1,0 +1,22 @@
+{
+    "layout": "manual",
+    "targets": {
+        "t1": { "x": 50, "y": 100, "unit": "px", "width": 80, "align": "center" },
+        "t2": { "x": 140, "y": 100, "width": 80 },
+        "t3": { "x": 230, "y": 100, "width": 80 },
+        "t4": { "x": 320, "y": 100, "width": 80 }
+    },
+    "items": {
+        "i1": { "x": 50, "y": 300, "fontSize": "14px", "backgroundColor": "#7ED321" },
+        "i2": { "x": 140, "y": 300 },
+        "i3": { "x": 230, "y": 300 },
+        "i4": { "x": 320, "y": 300 }
+    },
+    "global": {
+        "fontFamily": "Quicksand",
+        "fontSize": "16px",
+        "accentColor": "#4A90E2",
+        "borderRadius": "8px",
+        "animation": "drop-in"
+    }
+}
