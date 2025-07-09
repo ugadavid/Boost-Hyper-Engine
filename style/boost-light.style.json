@@ -1,0 +1,26 @@
+{
+  "layout": "auto",
+  "global": {
+    "fontFamily": "Inter, sans-serif",
+    "fontSize": "16px",
+    "accentColor": "#4A90E2",
+    "background": "#FFFFFF",
+    "textColor": "#333333",
+    "borderRadius": "10px"
+  },
+  "items": {
+    "default": {
+      "backgroundColor": "#F7F9FB",
+      "border": "1px solid #D0D5DD",
+      "shadow": "soft",
+      "hoverEffect": "scale"
+    }
+  },
+  "targets": {
+    "default": {
+      "backgroundColor": "#E8F0FE",
+      "border": "2px dashed #4A90E2",
+      "highlightOnHover": true
+    }
+  }
+}
