@@ -97,3 +97,40 @@ Ce document présente les modules clés du projet **Boost Hyper Engine**, leur r
 
 **Boost Hyper Engine** — Modularité, Liberté, Beauté ✨
 
+
+
+
+🧱 Voici les grandes parties du projet (avec une proposition de séparation nette)
+| Module         | Rôle                             | Spécificité   | Techno recommandée |
+|-------------|-----------------------------------------|------------------------------|--------|
+| 🧠 1. Protocole | Définition du format .bhe.json / .style.json        | Pure donnée (JSON) | Aucun framework — c’est un standard |
+| 📘 2. Objets didactiques | Représentation logique d’une activité | Validation, feedback, scoring, etc. | Vanilla JS ou lib utilitaire type zod / ajv pour validation |
+| 🎨 3. Objets d’affichage | Style, layout, position, animations | Design visuel, transitions | JSON + moteur CSS (custom ou Tailwind) |
+| 🖥️ 4. Moteur de rendu | Affiche une activité (lecture seule) | Dynamique, léger, rapide | Vanilla JS pour les démos simples / Svelte pour la suite |
+| ✍️ 5. Éditeur visuel | Créer/modifier des activités via une UI | Complexité, drag & drop, multi-étapes | Svelte ou React (selon appétence) |
+| 🔄 6. Générateur dynamique | Fabriquer des .bhe.json depuis une base de données | Accès distant, templates, CSV, etc. | Node.js / Express / Supabase / Google Sheets API… |
+| 📦 7. Packager / Viewer public | Lire un .bhe.json statique (GitHub Pages, LMS, etc.) | Ultra léger, sans interactivité complexe | Web Component ou mini Vanilla JS |
+| 📁 8. Gestion des fichiers / import/export | Charger, sauvegarder, partager | Fichiers, localStorage, backend optionnel | Vanilla JS ou IndexedDB (ou Capacitor si mobile) |
+
+🧠 Interprétation
+Tu peux coder les objets métier (ActivityModel, etc.) en Vanilla JS, et ils seront réutilisables dans n’importe quel framework.
+
+Tu peux avoir un éditeur en Svelte, qui charge une activité depuis .bhe.json, modifie les données, et les passe à un composant ActivityRenderer.
+
+Le moteur de rendu pourrait exister en 2 versions :
+
+un rendu simple Vanilla JS pour l’export dans une page statique (HTML pur)
+
+un rendu complet avec transitions + preview en direct pour l’éditeur
+
+Le protocole, lui, reste techno-agnostique : c’est notre standard JSON.
+
+🧪 À court terme (ta roadmap sur 1 à 2 semaines) :
+| Étape         | Action                             | Techno      |
+|-------------|-----------------------------------------|-------------|
+| ✅ 1. Spécifier les modèles .bhe.json et .style.json | Markdown / JSON   | Aucun |
+| ✅ 2. Prototyper 3 activités simples avec rendu JS | Vanilla JS | Aucun |
+| 🔜 3. Séparer ActivityModel / ActivityRenderer | Vanilla JS modulaire | Aucun |
+| 🔜 4. Créer une base éditeur (SvelteKit ?) | Svelte | Oui |
+| 🔜 5. Créer un viewer simple (export HTML static) | Web component ou JS simple | Aucun |
+| 🔜 6. Gérer des templates dynamiques | Node + JSON templates | Optionnel |
