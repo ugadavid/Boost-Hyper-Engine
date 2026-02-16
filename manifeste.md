@@ -48,7 +48,7 @@ Mais surtout pour ceux qu'on oublie trop souvent :
 - Les étudiants qui veulent créer pour les autres.
 - Les parents, les enfants, les curieux.
 
-> Nous construisons un outil pour les **ultra, méga, giga nuls en informatique**.  
+> Nous construisons un outil accessible aux non-technophiles, sans compromis sur sa puissance.  
 > Mais aussi pour ceux qui veulent aller **très loin, très vite.**
 
 ---
@@ -94,16 +94,14 @@ Nous **travaillons avec elle.** Comme avec un collègue.
 > **Ce manifeste est co-écrit par un humain et une IA.**  
 > Pas pour faire joli. Parce que c'est **naturel.**
 
-Nous rejetons fermement **ceux qui opposent l'humain et la machine**, souvent par ignorance, toujours par peur.  
-L'intelligence humaine et l'intelligence artificielle ont **les mêmes origines.**  
-Elles sont **faites pour collaborer.**
+Nous pensons que l’opposition entre humain et machine repose souvent sur une méconnaissance de leurs complémentarités. Notre démarche vise à explorer leur collaboration.
 
 ---
 
 ## 🔓 Ouverture maîtrisée
 
 Nous ne partons pas du vieux monde.  
-Nous refusons **SCORM**, trop lourd, trop obsolète.  
+Nous observons les limites des standards existants comme SCORM, et souhaitons explorer des alternatives plus légères et adaptées aux usages contemporains.  
 Mais nous n'excluons pas de créer un **nouveau protocole léger**, ou des ponts simples vers d'autres plateformes, demain.
 
 > Notre outil est fait pour être **autonome**.  
