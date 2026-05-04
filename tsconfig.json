@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    /* Langage / modules */
+    "target": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /* Plateformes (Node pour outils, DOM pour le renderer navigateur) */
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"],
+
+    /* Arborescence projet */
+    "rootDir": "./bhec",
+    "outDir": "./dist",
+
+    /* Sorties complémentaires */
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    /* Rigueur */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedSideEffectImports": true,
+
+    /* Confort */
+    "skipLibCheck": true
+  },
+  "include": ["bhec/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

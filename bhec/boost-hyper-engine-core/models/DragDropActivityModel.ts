@@ -1,16 +1,48 @@
-import { AbstractActivityModel } from "./AbstractActivityModel";
-import { ActivityMetadata } from "../types/ActivityMetadata";
-import { DragDropData } from "../types/DragDropData";
+import { AbstractActivityModel } from "./AbstractActivityModel.js";
+import type { ActivityMetadata } from "../types/ActivityMetadata.js";
+import type { DragDropData } from "../types/DragDropData.js";
 
+/**
+ * Modèle d’activité de type Drag & Drop.
+ * Implémente la logique spécifique aux exercices
+ * de glisser-déposer à partir du modèle abstrait.
+ */
 export class DragDropActivityModel extends AbstractActivityModel<DragDropData> {
+  /**
+   * Initialise un modèle Drag & Drop avec métadonnées et données.
+   *
+   * @param metadata - Métadonnées de l’activité
+   * @param data - Données Drag & Drop (cibles, items, options)
+   */
   constructor(metadata: ActivityMetadata, data: DragDropData) {
-    super("drag-drop", metadata, data);
+    super(metadata, data);
   }
 
+  /**
+   * Retourne la liste des cibles (zones de dépôt).
+   */
+  getTargets() {
+    return this.data.targets;
+  }
+
+  /**
+   * Retourne la liste des items déplaçables.
+   */
+  getItems() {
+    return this.data.items;
+  }
+
+  /**
+   * Retourne la liste des identifiants de cibles.
+   */
   getTargetIds(): string[] {
-    return this.data.targets.map(target => target.id);
+    return this.data.targets.map((target) => target.id);
   }
 
+  /**
+   * Crée une table de correspondance { idItem → idTarget }.
+   * Utile pour valider les associations.
+   */
   getItemTargetMap(): Record<string, string> {
     const map: Record<string, string> = {};
     for (const item of this.data.items) {
@@ -19,15 +51,21 @@ export class DragDropActivityModel extends AbstractActivityModel<DragDropData> {
     return map;
   }
 
-  isItemShuffled(): boolean {
-    return this.data.shuffle;
+  /**
+   * Indique si le mélange aléatoire des items est activé.
+   */
+  isShuffleEnabled(): boolean {
+    return !!this.data.shuffle;
   }
 
-  // Obligatoire car abstrait dans AbstractActivityModel
+  /**
+   * Vérifie la validité de l’activité.
+   * Une activité est valide si chaque item référence une cible existante.
+   *
+   * @returns true si valide, false sinon
+   */
   validate(): boolean {
-    // Implémentation simple : vérifier que tous les items pointent vers un target existant
-    const targetIds = this.getTargetIds();
-    const invalidItems = this.data.items.filter(item => !targetIds.includes(item.target));
-    return invalidItems.length === 0;
+    const ids = this.getTargetIds();
+    return this.data.items.every((i) => ids.includes(i.target));
   }
 }

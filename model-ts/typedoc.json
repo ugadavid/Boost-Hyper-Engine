@@ -1,0 +1,11 @@
+{
+  "entryPoints": ["src", "src/boost-hyper-engine-core/guide"],
+  "entryPointStrategy": "Expand",
+  "out": "docs",
+  "includeVersion": true,
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "hideGenerator": true,
+  "readme": "src/README.md",
+  "plugin": []
+}

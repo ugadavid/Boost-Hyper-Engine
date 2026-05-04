@@ -1,0 +1,33 @@
+{
+  "name": "boost-hyper-engine",
+  "version": "1.0.0",
+  "description": "Boost Hyper Engine — moteur pédagogique libre en TypeScript.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "docs": "typedoc",
+    "docs:watch": "typedoc --watch",
+    "start": "npm run build && npx serve -l 5173 .",
+    "clean": "rimraf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ugadavid/Boost-Hyper-Engine.git"
+  },
+  "keywords": ["education", "typescript", "engine", "bhe"],
+  "author": "David Subileau & GPT",
+  "license": "CC-BY-SA-4.0",
+  "bugs": {
+    "url": "https://github.com/ugadavid/Boost-Hyper-Engine/issues"
+  },
+  "homepage": "https://github.com/ugadavid/Boost-Hyper-Engine#readme",
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.28.7",
+    "typescript": "^5.9.2"
+  }
+}

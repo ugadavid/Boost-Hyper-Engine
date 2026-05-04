@@ -1,0 +1,12 @@
+{
+  "entryPoints": [
+    "bhec/boost-hyper-engine-core/types/index.ts",
+    "bhec/boost-hyper-engine-core/routing/index.ts"
+  ],
+  "out": "docs/api",
+  "name": "Boost Hyper Engine Core",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "readme": "README.md"
+}
