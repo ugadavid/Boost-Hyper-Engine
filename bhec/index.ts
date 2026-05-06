@@ -1,6 +1,6 @@
-import { DragDropActivityModel } from "./boost-hyper-engine-core/models/DragDropActivityModel.js";
-import type { ActivityMetadata } from "./boost-hyper-engine-core/types/ActivityMetadata.js";
-import type { DragDropData } from "./boost-hyper-engine-core/types/DragDropData.js";
+import { DragDropActivityModel } from "../packages/core/models/DragDropActivityModel.js";
+import type { ActivityMetadata } from "../packages/core/types/ActivityMetadata.js";
+import type { DragDropData } from "../packages/core/types/DragDropData.js";
 
 const metadata: ActivityMetadata = {
   id: "001",

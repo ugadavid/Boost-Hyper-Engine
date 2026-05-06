@@ -12,7 +12,7 @@
     "types": ["node"],
 
     /* Arborescence projet */
-    "rootDir": "./bhec",
+    "rootDir": ".",
     "outDir": "./dist",
 
     /* Sorties complémentaires */
@@ -29,6 +29,6 @@
     /* Confort */
     "skipLibCheck": true
   },
-  "include": ["bhec/**/*.ts"],
+  "include": ["bhec/**/*.ts", "packages/**/*.ts", "examples/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

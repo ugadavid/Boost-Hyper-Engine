@@ -1,7 +1,7 @@
-// bhec/renderer/ActivityRenderer.ts
-import { DragDropActivityModel } from "../boost-hyper-engine-core/models/DragDropActivityModel.js";
-import type { ActivityMetadata } from "../boost-hyper-engine-core/types/ActivityMetadata.js";
-import type { DragDropData } from "../boost-hyper-engine-core/types/DragDropData.js";
+// packages/renderer/ActivityRenderer.ts
+import { DragDropActivityModel } from "../core/models/DragDropActivityModel.js";
+import type { ActivityMetadata } from "../core/types/ActivityMetadata.js";
+import type { DragDropData } from "../core/types/DragDropData.js";
 
 /** Types style (alignés sur /style/drag-drop.style.json) */
 type Unit = "px" | "%" | "rem" | string;

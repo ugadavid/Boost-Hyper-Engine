@@ -1,7 +1,7 @@
 {
   "entryPoints": [
-    "bhec/boost-hyper-engine-core/types/index.ts",
-    "bhec/boost-hyper-engine-core/routing/index.ts"
+    "packages/core/types/index.ts",
+    "packages/core/routing/index.ts"
   ],
   "out": "docs/api",
   "name": "Boost Hyper Engine Core",

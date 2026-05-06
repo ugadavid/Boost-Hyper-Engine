@@ -1,5 +1,5 @@
-import { evaluateAdaptiveRouting } from "../boost-hyper-engine-core/routing/index.js";
-import type { BHEObject, BHEResult, HasAdaptiveRouting } from "../boost-hyper-engine-core/types/index.js";
+import { evaluateAdaptiveRouting } from "../packages/core/routing/index.js";
+import type { BHEObject, BHEResult, HasAdaptiveRouting } from "../packages/core/types/index.js";
 
 const personalityAdjectivesQuiz: BHEObject & HasAdaptiveRouting = {
   type: "quiz",
