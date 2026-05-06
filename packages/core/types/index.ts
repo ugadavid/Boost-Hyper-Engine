@@ -1,6 +1,12 @@
 export type { ActivityMetadata } from "./ActivityMetadata.js";
 export type { ActivityModel } from "./ActivityModel.js";
 export type {
+  AssociationEntry,
+  AssociationInteractionMode,
+  AssociationPair,
+  AssociationSet
+} from "./AssociationSet.js";
+export type {
   AdaptiveRoute,
   AdaptiveRouting,
   AdaptiveRoutingCondition,
