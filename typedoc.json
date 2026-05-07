@@ -1,7 +1,11 @@
 {
   "entryPoints": [
     "packages/core/types/index.ts",
-    "packages/core/routing/index.ts"
+    "packages/core/routing/index.ts",
+    "packages/renderer/types/RendererDefinition.ts",
+    "packages/renderer/registry/rendererRegistry.ts",
+    "packages/renderer/renderers/associationDragDropTextRenderer.ts",
+    "packages/renderer/renderers/classificationQcmTextRenderer.ts"
   ],
   "out": "docs/api",
   "name": "Boost Hyper Engine Core",

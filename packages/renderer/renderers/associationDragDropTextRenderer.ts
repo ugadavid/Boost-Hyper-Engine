@@ -1,0 +1,10 @@
+import type { RendererDefinition } from "../types/RendererDefinition.js";
+
+export const associationDragDropTextRenderer: RendererDefinition = {
+  id: "association-drag-drop-text-renderer",
+  supportedPedagogicalTypes: ["association"],
+  supportedInteractionModes: ["drag-drop"],
+  render(object, interactionMode) {
+    return `Renderer ${this.id} can present "${object.metadata.title ?? object.metadata.id}" as ${interactionMode}.`;
+  }
+};

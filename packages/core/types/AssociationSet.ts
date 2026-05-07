@@ -1,7 +1,7 @@
-/**
- * Interaction modes that can use the same association content.
- */
-export type AssociationInteractionMode = "drag-drop" | "memory" | "flashcards";
+import type { InteractionMode } from "./InteractionMode.js";
+import type { PedagogicalObject } from "./PedagogicalObject.js";
+
+export type AssociationInteractionMode = InteractionMode;
 
 /**
  * A reusable entry in an association set.
@@ -44,23 +44,7 @@ export interface AssociationPair {
   feedback?: string;
 }
 
-/**
- * Abstract pedagogical object for association-based activities.
- *
- * The same AssociationSet can later be presented through multiple interaction
- * modes, such as drag-drop, memory, or flashcards.
- */
-export interface AssociationSet {
-  /**
-   * Stable content identifier.
-   */
-  id: string;
-
-  /**
-   * Human-readable title.
-   */
-  title: string;
-
+export interface AssociationSetCore {
   /**
    * Reusable entries that can be associated.
    */
@@ -70,9 +54,19 @@ export interface AssociationSet {
    * Expected associations between entries.
    */
   associations: AssociationPair[];
+}
 
+/**
+ * Pedagogical object specialized for association-based activities.
+ *
+ * The same AssociationSet can be presented through multiple interaction modes,
+ * such as drag-drop, memory, or flashcards.
+ */
+export interface AssociationSet extends PedagogicalObject<AssociationSetCore> {
+  pedagogicalFamily: "structural";
+  pedagogicalType: "association";
   /**
    * Interaction modes that can present this association set.
    */
-  interactionModes: AssociationInteractionMode[];
+  interactionModes: InteractionMode[];
 }
