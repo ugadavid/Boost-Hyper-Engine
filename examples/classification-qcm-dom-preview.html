@@ -82,15 +82,43 @@
       .bhe-qcm__feedback {
         min-height: 24px;
         margin: 18px 0 0;
+      }
+
+      .bhe-feedback {
+        display: grid;
+        gap: 10px;
+      }
+
+      .bhe-feedback__message {
+        padding: 10px 12px;
+        border: 1px solid #d7dee8;
+        border-left-width: 5px;
+        border-radius: 8px;
+        background: #fbfcfe;
+      }
+
+      .bhe-feedback__summary {
         font-weight: 700;
       }
 
-      .bhe-qcm__feedback[data-status="correct"] {
-        color: #1f8a4c;
+      .bhe-feedback__message-text {
+        margin: 0;
       }
 
-      .bhe-qcm__feedback[data-status="incorrect"] {
-        color: #c2413a;
+      .bhe-feedback--success {
+        border-left-color: #1f8a4c;
+      }
+
+      .bhe-feedback--info {
+        border-left-color: #2563eb;
+      }
+
+      .bhe-feedback--warning {
+        border-left-color: #b26a00;
+      }
+
+      .bhe-feedback--error {
+        border-left-color: #c2413a;
       }
     </style>
   </head>

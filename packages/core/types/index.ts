@@ -21,18 +21,37 @@ export type { BHEContentBlock } from "./BHEContentBlock.js";
 export type { BHEObject } from "./BHEObject.js";
 export type { BHEResult, BHEResultStatus } from "./BHEResult.js";
 export type {
+  AudioUnit,
+  BaseContentUnit,
+  ContentUnit,
+  ImageUnit,
+  TextUnit,
+  VideoUnit
+} from "./content/index.js";
+export type {
   ClassificationCategory,
   ClassificationItem,
   ClassificationSet,
   ClassificationSetCore
 } from "./ClassificationSet.js";
 export type { DragDropData, DragDropItem, DragDropTarget } from "./DragDropData.js";
+export type {
+  FeedbackData,
+  FeedbackMessage,
+  FeedbackSeverity
+} from "./feedback/index.js";
 export type { GapFillBlank, GapFillSet, GapFillSetCore } from "./GapFillSet.js";
 export type {
   IdentificationSet,
   IdentificationSetCore,
   IdentificationTarget
 } from "./IdentificationSet.js";
+export type {
+  BaseUserInput,
+  ContextualTypingUserInput,
+  QcmUserInput,
+  UserInput
+} from "./input/index.js";
 export type {
   InferenceEvidence,
   InferencePrompt,

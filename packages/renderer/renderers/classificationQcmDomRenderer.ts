@@ -1,5 +1,7 @@
-import type { ClassificationSet } from "../../core/types/index.js";
+import { evaluateClassificationQcm } from "../../core/evaluators/index.js";
+import type { ClassificationSet, QcmUserInput } from "../../core/types/index.js";
 import { classificationToQcmData } from "../adapters/classificationToQcmAdapter.js";
+import { mountFeedbackFromResult } from "../feedback/feedbackMounting.js";
 import type { RendererDefinition } from "../types/RendererDefinition.js";
 
 type DomRendererDefinition = RendererDefinition & {
@@ -52,7 +54,7 @@ export const classificationQcmDomRenderer: DomRendererDefinition = {
     const choices = document.createElement("div");
     choices.className = "bhe-qcm__choices";
 
-    const feedback = document.createElement("p");
+    const feedback = document.createElement("div");
     feedback.className = "bhe-qcm__feedback";
     feedback.setAttribute("aria-live", "polite");
 
@@ -63,17 +65,22 @@ export const classificationQcmDomRenderer: DomRendererDefinition = {
       choice.textContent = choiceData.label;
 
       choice.addEventListener("click", () => {
-        const isCorrect = choiceData.id === firstQuestion.correctChoiceId;
-
         choices.querySelectorAll("button").forEach((button) => {
           button.removeAttribute("aria-pressed");
           button.classList.remove("is-selected", "is-correct", "is-incorrect");
         });
 
+        const input: QcmUserInput = {
+          interactionMode: "qcm",
+          selectedChoiceId: choiceData.id,
+          timestamp: new Date().toISOString()
+        };
+        const result = evaluateClassificationQcm(firstQuestion, input);
+        const isCorrect = result.details?.isCorrect === true;
+
         choice.setAttribute("aria-pressed", "true");
         choice.classList.add("is-selected", isCorrect ? "is-correct" : "is-incorrect");
-        feedback.textContent = isCorrect ? "Correct." : "Incorrect.";
-        feedback.dataset.status = isCorrect ? "correct" : "incorrect";
+        mountFeedbackFromResult({ result, container: feedback });
       });
 
       choices.append(choice);

@@ -1,5 +1,6 @@
 import type { InteractionMode } from "./InteractionMode.js";
 import type { PedagogicalObject } from "./PedagogicalObject.js";
+import type { ContentUnit } from "./content/index.js";
 
 export type AssociationInteractionMode = InteractionMode;
 
@@ -14,14 +15,26 @@ export interface AssociationEntry {
 
   /**
    * Human-readable content.
+   *
+   * Transitional compatibility field. New multimodal entries can use `unit`.
    */
-  label: string;
+  label?: string;
+
+  /**
+   * Optional structured content unit manipulated by the learner.
+   */
+  unit?: ContentUnit;
 
   /**
    * Optional entry kind, for example "word", "definition", "image", or
    * "audio".
    */
   kind?: string;
+
+  /**
+   * Optional entry metadata.
+   */
+  metadata?: Record<string, unknown>;
 }
 
 /**

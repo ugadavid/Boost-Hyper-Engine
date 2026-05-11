@@ -1,8 +1,9 @@
-import type { GapFillSet } from "../../core/types/index.js";
+import { evaluateGapFillTyping } from "../../core/evaluators/index.js";
+import type { ContextualTypingUserInput, GapFillSet } from "../../core/types/index.js";
 import {
-  gapFillToContextualTypingData,
-  type TypingBlankData
+  gapFillToContextualTypingData
 } from "../adapters/gapFillToContextualTypingAdapter.js";
+import { mountFeedbackFromResult } from "../feedback/feedbackMounting.js";
 import type { RendererDefinition } from "../types/RendererDefinition.js";
 
 type DomRendererDefinition = RendererDefinition & {
@@ -22,38 +23,6 @@ function createMessage(message: string): HTMLElement {
   section.append(text);
 
   return section;
-}
-
-function normalizeAnswer(
-  value: string,
-  options: { caseSensitive?: boolean; accentSensitive?: boolean }
-): string {
-  let normalized = value.trim();
-
-  if (!options.caseSensitive) {
-    normalized = normalized.toLowerCase();
-  }
-
-  if (!options.accentSensitive) {
-    normalized = normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  }
-
-  return normalized;
-}
-
-function acceptedAnswers(blank: TypingBlankData): string[] {
-  return Array.isArray(blank.expected) ? blank.expected : [blank.expected];
-}
-
-function isCorrectAnswer(
-  value: string,
-  blank: TypingBlankData,
-  options: { caseSensitive?: boolean; accentSensitive?: boolean }
-): boolean {
-  const actual = normalizeAnswer(value, options);
-  return acceptedAnswers(blank).some(
-    (expected) => normalizeAnswer(expected, options) === actual
-  );
 }
 
 export const gapFillTypingDomRenderer: DomRendererDefinition = {
@@ -77,7 +46,6 @@ export const gapFillTypingDomRenderer: DomRendererDefinition = {
     const contextualTypingData = gapFillToContextualTypingData(object);
     const feedbackByBlankId = new Map<string, HTMLElement>();
     const inputByBlankId = new Map<string, HTMLInputElement>();
-    const blankById = new Map<string, TypingBlankData>();
 
     for (const segment of contextualTypingData.segments) {
       if ("text" in segment) {
@@ -85,7 +53,6 @@ export const gapFillTypingDomRenderer: DomRendererDefinition = {
         continue;
       }
 
-      blankById.set(segment.id, segment);
       const input = document.createElement("input");
       input.className = "bhe-gap-fill__input";
       input.type = "text";
@@ -110,21 +77,36 @@ export const gapFillTypingDomRenderer: DomRendererDefinition = {
     checkButton.className = "bhe-gap-fill__check";
     checkButton.textContent = "Check";
 
-    checkButton.addEventListener("click", () => {
-      for (const [blankId, blank] of blankById) {
-        const input = inputByBlankId.get(blankId);
-        const feedback = feedbackByBlankId.get(blankId);
-        if (!input || !feedback) continue;
+    const feedbackContainer = document.createElement("div");
+    feedbackContainer.className = "bhe-gap-fill__feedback";
+    feedbackContainer.setAttribute("aria-live", "polite");
 
-        const isCorrect = isCorrectAnswer(input.value, blank, contextualTypingData);
-        input.classList.toggle("is-correct", isCorrect);
-        input.classList.toggle("is-incorrect", !isCorrect);
-        feedback.textContent = isCorrect ? " correct" : " incorrect";
-        feedback.dataset.status = isCorrect ? "correct" : "incorrect";
+    checkButton.addEventListener("click", () => {
+      const input: ContextualTypingUserInput = {
+        interactionMode: "typing",
+        timestamp: new Date().toISOString(),
+        typedAnswers: Array.from(inputByBlankId, ([blankId, inputElement]) => ({
+          blankId,
+          value: inputElement.value
+        }))
+      };
+      const result = evaluateGapFillTyping(contextualTypingData, input);
+
+      for (const blankResult of result.details?.blankResults ?? []) {
+        const inputElement = inputByBlankId.get(blankResult.blankId);
+        const feedback = feedbackByBlankId.get(blankResult.blankId);
+        if (!inputElement || !feedback) continue;
+
+        inputElement.classList.toggle("is-correct", blankResult.isCorrect);
+        inputElement.classList.toggle("is-incorrect", !blankResult.isCorrect);
+        feedback.textContent = blankResult.isCorrect ? " correct" : " incorrect";
+        feedback.dataset.status = blankResult.isCorrect ? "correct" : "incorrect";
       }
+
+      mountFeedbackFromResult({ result, container: feedbackContainer });
     });
 
-    section.append(title, context, checkButton);
+    section.append(title, context, checkButton, feedbackContainer);
     return section;
   }
 };

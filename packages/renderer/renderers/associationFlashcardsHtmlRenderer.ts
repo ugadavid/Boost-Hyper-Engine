@@ -14,6 +14,10 @@ function isAssociationSet(object: Parameters<RendererDefinition["render"]>[0]): 
   return object.pedagogicalType === "association";
 }
 
+function entryLabel(entry: AssociationSet["content"]["core"]["entries"][number]): string {
+  return entry.label ?? entry.id;
+}
+
 export const associationFlashcardsHtmlRenderer: RendererDefinition = {
   id: "association-flashcards-html-renderer",
   supportedPedagogicalTypes: ["association"],
@@ -54,8 +58,8 @@ export const associationFlashcardsHtmlRenderer: RendererDefinition = {
 
       return `
         <article class="bhe-flashcard" data-association-id="${escapeHtml(association.id)}">
-          <div class="bhe-flashcard__front">${escapeHtml(front.label)}</div>
-          <div class="bhe-flashcard__back">${escapeHtml(back.label)}</div>
+          <div class="bhe-flashcard__front">${escapeHtml(entryLabel(front))}</div>
+          <div class="bhe-flashcard__back">${escapeHtml(entryLabel(back))}</div>
           ${feedback}
         </article>
       `.trim();

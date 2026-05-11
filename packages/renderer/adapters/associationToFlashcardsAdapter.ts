@@ -1,4 +1,4 @@
-import type { AssociationSet } from "../../core/types/index.js";
+import type { AssociationEntry, AssociationSet, ContentUnit } from "../../core/types/index.js";
 
 export interface FlashcardData {
   id: string;
@@ -8,6 +8,27 @@ export interface FlashcardData {
 
 export interface FlashcardsData {
   cards: FlashcardData[];
+}
+
+function contentUnitToText(unit: ContentUnit): string {
+  switch (unit.kind) {
+    case "text":
+      return unit.text;
+    case "image":
+      return unit.alt ? `[image: ${unit.alt}]` : `[image: ${unit.src}]`;
+    case "audio":
+      return unit.transcript ? `[audio: ${unit.transcript}]` : `[audio: ${unit.src}]`;
+    case "video":
+      return unit.transcript ? `[video: ${unit.transcript}]` : `[video: ${unit.src}]`;
+  }
+}
+
+function associationEntryToText(entry: AssociationEntry): string {
+  if (entry.unit) {
+    return contentUnitToText(entry.unit);
+  }
+
+  return entry.label ?? entry.id;
 }
 
 export function associationToFlashcardsData(object: AssociationSet): FlashcardsData {
@@ -31,8 +52,8 @@ export function associationToFlashcardsData(object: AssociationSet): FlashcardsD
     return [
       {
         id: association.id,
-        front: front.label,
-        back: back.label
+        front: associationEntryToText(front),
+        back: associationEntryToText(back)
       }
     ];
   });
