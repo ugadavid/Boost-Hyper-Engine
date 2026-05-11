@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BHE Gap Fill Typing DOM Preview</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #1f2933;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+
+      main {
+        max-width: 840px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .preview-note {
+        margin: 0 0 24px;
+        color: #5f6b7a;
+      }
+
+      .bhe-gap-fill {
+        padding: 22px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgb(31 41 51 / 8%);
+      }
+
+      .bhe-gap-fill h2 {
+        margin: 0 0 14px;
+      }
+
+      .bhe-gap-fill__context {
+        margin: 0 0 18px;
+        font-size: 18px;
+        line-height: 2.2;
+      }
+
+      .bhe-gap-fill__input {
+        width: 110px;
+        margin: 0 6px;
+        padding: 6px 8px;
+        border: 1px solid #b8c4d1;
+        border-radius: 6px;
+        font: inherit;
+      }
+
+      .bhe-gap-fill__input.is-correct {
+        border-color: #1f8a4c;
+        background: #eaf7ef;
+      }
+
+      .bhe-gap-fill__input.is-incorrect {
+        border-color: #c2413a;
+        background: #fff0ef;
+      }
+
+      .bhe-gap-fill__blank-feedback {
+        min-width: 76px;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .bhe-gap-fill__blank-feedback[data-status="correct"] {
+        color: #1f8a4c;
+      }
+
+      .bhe-gap-fill__blank-feedback[data-status="incorrect"] {
+        color: #c2413a;
+      }
+
+      .bhe-gap-fill__check {
+        padding: 10px 14px;
+        border: 1px solid #2563eb;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>BHE Gap Fill Typing DOM Preview</h1>
+      <p class="preview-note">
+        Temporary DOM renderer prototype. Type answers, then click Check.
+      </p>
+      <div id="app"></div>
+    </main>
+
+    <script type="module">
+      import { gapFillTypingDomRenderer } from "../dist/packages/renderer/renderers/gapFillTypingDomRenderer.js";
+
+      const gapFillSet = {
+        kind: "pedagogical-object",
+        type: "gap-fill-set",
+        pedagogicalFamily: "productive",
+        pedagogicalType: "gap-fill",
+        metadata: {
+          id: "restaurant-gap-fill-dom",
+          title: "Restaurant Dialogue Gap Fill",
+          language: "en",
+          level: "A2"
+        },
+        learningGoal: {
+          domain: "English",
+          skill: "interaction",
+          topic: "ordering food",
+          cefr: "A2"
+        },
+        content: {
+          core: {
+            context: "Good evening. I would like a ___ and a glass of ___.",
+            blanks: [
+              {
+                id: "blank-food",
+                label: "food",
+                start: 34,
+                end: 37,
+                expected: ["salad", "soup"],
+                hint: "Try salad or soup.",
+                feedback: "A food item fits here."
+              },
+              {
+                id: "blank-drink",
+                label: "drink",
+                start: 53,
+                end: 56,
+                expected: "water",
+                hint: "A common drink.",
+                feedback: "A glass of water is a natural phrase."
+              }
+            ],
+            allowMultipleAnswers: true,
+            caseSensitive: false,
+            accentSensitive: false
+          }
+        },
+        interactionModes: ["typing"],
+        validate() {
+          return true;
+        }
+      };
+
+      document
+        .getElementById("app")
+        .append(gapFillTypingDomRenderer.renderDom(gapFillSet));
+    </script>
+  </body>
+</html>

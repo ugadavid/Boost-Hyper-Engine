@@ -5,6 +5,7 @@
     "packages/renderer/types/RendererDefinition.ts",
     "packages/renderer/registry/rendererRegistry.ts",
     "packages/renderer/renderers/associationDragDropTextRenderer.ts",
+    "packages/renderer/renderers/associationFlashcardsHtmlRenderer.ts",
     "packages/renderer/renderers/classificationQcmTextRenderer.ts"
   ],
   "out": "docs/api",

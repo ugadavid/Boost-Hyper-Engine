@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BHE Association Flashcards DOM Preview</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #1f2933;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .preview-note {
+        margin: 0 0 24px;
+        color: #5f6b7a;
+      }
+
+      .bhe-flashcards h2 {
+        margin: 0 0 16px;
+        font-size: 22px;
+      }
+
+      .bhe-flashcards__list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+      }
+
+      .bhe-flashcard {
+        min-height: 150px;
+        width: 100%;
+        padding: 18px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgb(31 41 51 / 8%);
+        color: inherit;
+        cursor: pointer;
+        text-align: left;
+      }
+
+      .bhe-flashcard-front,
+      .bhe-flashcard-back {
+        display: block;
+      }
+
+      .bhe-flashcard-front {
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .bhe-flashcard-back {
+        color: #344054;
+        font-size: 19px;
+        font-weight: 600;
+      }
+
+      .bhe-flashcard [hidden] {
+        display: none !important;
+      }
+
+      .bhe-flashcard[aria-expanded="true"] {
+        border-color: #4a90e2;
+        background: #eef6ff;
+      }
+
+      .bhe-flashcard.is-flipped {
+        box-shadow: 0 10px 24px rgb(74 144 226 / 18%);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>BHE Association Flashcards DOM Preview</h1>
+      <p class="preview-note">
+        Temporary DOM renderer prototype. Click a card to show or hide the answer.
+      </p>
+      <div id="app"></div>
+    </main>
+
+    <script type="module">
+      import { associationFlashcardsDomRenderer } from "../dist/packages/renderer/renderers/associationFlashcardsDomRenderer.js";
+
+      const associationSet = {
+        kind: "pedagogical-object",
+        type: "association-set",
+        pedagogicalFamily: "structural",
+        pedagogicalType: "association",
+        metadata: {
+          id: "personality-adjectives-dom-flashcards",
+          title: "Personality Adjectives DOM Flashcards",
+          language: "en",
+          level: "A2"
+        },
+        learningGoal: {
+          domain: "English",
+          skill: "vocabulary",
+          topic: "personality adjectives",
+          cefr: "A2"
+        },
+        content: {
+          core: {
+            entries: [
+              { id: "word-kind", label: "kind", kind: "word" },
+              { id: "definition-kind", label: "friendly and helpful", kind: "definition" },
+              { id: "word-shy", label: "shy", kind: "word" },
+              { id: "definition-shy", label: "nervous around other people", kind: "definition" },
+              { id: "word-confident", label: "confident", kind: "word" },
+              { id: "definition-confident", label: "sure about your abilities", kind: "definition" }
+            ],
+            associations: [
+              { id: "kind-definition", entryIds: ["word-kind", "definition-kind"] },
+              { id: "shy-definition", entryIds: ["word-shy", "definition-shy"] },
+              { id: "confident-definition", entryIds: ["word-confident", "definition-confident"] }
+            ]
+          }
+        },
+        interactionModes: ["flashcards"],
+        validate() {
+          return true;
+        }
+      };
+
+      document
+        .getElementById("app")
+        .append(associationFlashcardsDomRenderer.renderDom(associationSet));
+    </script>
+  </body>
+</html>

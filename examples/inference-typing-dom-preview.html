@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BHE Inference Typing DOM Preview</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #1f2933;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .preview-note {
+        margin: 0 0 24px;
+        color: #5f6b7a;
+      }
+
+      .bhe-inference {
+        padding: 22px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgb(31 41 51 / 8%);
+      }
+
+      .bhe-inference h2 {
+        margin: 0 0 14px;
+      }
+
+      .bhe-inference__context {
+        margin: 0 0 16px;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .bhe-inference__evidence {
+        margin: 0 0 18px;
+        padding-left: 20px;
+        color: #52606d;
+      }
+
+      .bhe-inference__prompt {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid #e1e7ef;
+        border-radius: 8px;
+        background: #fbfcfe;
+      }
+
+      .bhe-inference__prompt h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .bhe-inference__prompt label {
+        display: grid;
+        gap: 6px;
+        font-weight: 700;
+      }
+
+      .bhe-inference__input,
+      .bhe-inference__textarea {
+        padding: 9px 10px;
+        border: 1px solid #b8c4d1;
+        border-radius: 6px;
+        font: inherit;
+      }
+
+      .bhe-inference__input.is-correct,
+      .bhe-inference__textarea.is-correct {
+        border-color: #1f8a4c;
+        background: #eaf7ef;
+      }
+
+      .bhe-inference__input.is-incorrect,
+      .bhe-inference__textarea.is-incorrect {
+        border-color: #c2413a;
+        background: #fff0ef;
+      }
+
+      .bhe-inference__check {
+        width: fit-content;
+        padding: 10px 14px;
+        border: 1px solid #2563eb;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+      }
+
+      .bhe-inference__feedback {
+        min-height: 24px;
+        margin: 0;
+        font-weight: 700;
+      }
+
+      .bhe-inference__feedback[data-status="correct"] {
+        color: #1f8a4c;
+      }
+
+      .bhe-inference__feedback[data-status="incorrect"] {
+        color: #c2413a;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>BHE Inference Typing DOM Preview</h1>
+      <p class="preview-note">
+        Temporary DOM renderer prototype. Type an inference and a justification.
+      </p>
+      <div id="app"></div>
+    </main>
+
+    <script type="module">
+      import { inferenceTypingDomRenderer } from "../dist/packages/renderer/renderers/inferenceTypingDomRenderer.js";
+
+      const inferenceSet = {
+        kind: "pedagogical-object",
+        type: "inference-set",
+        pedagogicalFamily: "interpretive",
+        pedagogicalType: "inference",
+        metadata: {
+          id: "spanish-inference-dom",
+          title: "Inferir el sentido por contexto",
+          language: "es",
+          level: "A2"
+        },
+        learningGoal: {
+          domain: "Intercomprehension",
+          skill: "lexical inference",
+          topic: "inferring meaning from context",
+          cefr: "A2"
+        },
+        content: {
+          core: {
+            context:
+              "Aunque la palabra desconocida parecia dificil, el estudiante pudo comprenderla gracias al contexto.",
+            evidence: [
+              { id: "evidence-desconocida", label: "desconocida", kind: "unknown-word" },
+              { id: "evidence-comprenderla", label: "comprenderla", kind: "transparent-word" },
+              { id: "evidence-contexto", label: "contexto", kind: "transparent-word" }
+            ],
+            prompts: [
+              {
+                id: "infer-desconocida",
+                question: "What can you infer about the word 'desconocida'?",
+                expectedInference: "unknown",
+                acceptedInferences: ["unfamiliar", "not known"],
+                acceptedJustifications: [
+                  "The text says the word was difficult but understood from context."
+                ],
+                evidenceIds: ["evidence-desconocida", "evidence-comprenderla", "evidence-contexto"],
+                hint: "Try: unknown",
+                feedback: "desconocida can be inferred as unknown or unfamiliar."
+              }
+            ],
+            allowMultipleInferences: true,
+            requireJustification: true,
+            confidenceScale: false
+          }
+        },
+        interactionModes: ["typing"],
+        validate() {
+          return true;
+        }
+      };
+
+      document
+        .getElementById("app")
+        .append(inferenceTypingDomRenderer.renderDom(inferenceSet));
+    </script>
+  </body>
+</html>

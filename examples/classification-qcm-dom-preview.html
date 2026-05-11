@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BHE Classification QCM DOM Preview</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #1f2933;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .preview-note {
+        margin: 0 0 24px;
+        color: #5f6b7a;
+      }
+
+      .bhe-qcm {
+        padding: 22px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgb(31 41 51 / 8%);
+      }
+
+      .bhe-qcm h2 {
+        margin: 0 0 12px;
+      }
+
+      .bhe-qcm__question {
+        margin: 0 0 18px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .bhe-qcm__choices {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .bhe-qcm__choice {
+        padding: 10px 14px;
+        border: 1px solid #b8c4d1;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .bhe-qcm__choice.is-selected {
+        border-width: 2px;
+      }
+
+      .bhe-qcm__choice.is-correct {
+        border-color: #1f8a4c;
+        background: #eaf7ef;
+      }
+
+      .bhe-qcm__choice.is-incorrect {
+        border-color: #c2413a;
+        background: #fff0ef;
+      }
+
+      .bhe-qcm__feedback {
+        min-height: 24px;
+        margin: 18px 0 0;
+        font-weight: 700;
+      }
+
+      .bhe-qcm__feedback[data-status="correct"] {
+        color: #1f8a4c;
+      }
+
+      .bhe-qcm__feedback[data-status="incorrect"] {
+        color: #c2413a;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>BHE Classification QCM DOM Preview</h1>
+      <p class="preview-note">
+        Temporary DOM renderer prototype. Select a category to get feedback.
+      </p>
+      <div id="app"></div>
+    </main>
+
+    <script type="module">
+      import { classificationQcmDomRenderer } from "../dist/packages/renderer/renderers/classificationQcmDomRenderer.js";
+
+      const classificationSet = {
+        kind: "pedagogical-object",
+        type: "classification-set",
+        pedagogicalFamily: "structural",
+        pedagogicalType: "classification",
+        metadata: {
+          id: "french-gender-qcm",
+          title: "Masculin / Feminin",
+          language: "fr",
+          level: "A1"
+        },
+        learningGoal: {
+          domain: "French",
+          skill: "grammar",
+          topic: "noun gender",
+          cefr: "A1"
+        },
+        content: {
+          core: {
+            categories: [
+              { id: "masculine", label: "Masculin" },
+              { id: "feminine", label: "Feminin" }
+            ],
+            items: [
+              {
+                id: "item-table",
+                label: "table",
+                categoryId: "feminine",
+                kind: "word",
+                feedback: "Correct. On dit une table."
+              }
+            ]
+          }
+        },
+        interactionModes: ["qcm"],
+        validate() {
+          return true;
+        }
+      };
+
+      document
+        .getElementById("app")
+        .append(classificationQcmDomRenderer.renderDom(classificationSet));
+    </script>
+  </body>
+</html>
