@@ -47,6 +47,7 @@ export type {
   IdentificationTarget
 } from "./IdentificationSet.js";
 export type {
+  AssociationDragDropUserInput,
   BaseUserInput,
   ContextualTypingUserInput,
   QcmUserInput,

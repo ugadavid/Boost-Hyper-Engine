@@ -17,4 +17,15 @@ export interface ContextualTypingUserInput extends BaseUserInput {
   }[];
 }
 
-export type UserInput = QcmUserInput | ContextualTypingUserInput;
+export interface AssociationDragDropUserInput extends BaseUserInput {
+  interactionMode: "drag-drop";
+  placements: {
+    entryId: string;
+    zoneId: string;
+  }[];
+}
+
+export type UserInput =
+  | QcmUserInput
+  | ContextualTypingUserInput
+  | AssociationDragDropUserInput;

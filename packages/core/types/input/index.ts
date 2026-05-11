@@ -1,4 +1,5 @@
 export type {
+  AssociationDragDropUserInput,
   BaseUserInput,
   ContextualTypingUserInput,
   QcmUserInput,

@@ -1,4 +1,11 @@
 export {
+  evaluateAssociationDragDrop,
+  type AssociationDragDropEvaluationData,
+  type AssociationDragDropExpectedZone,
+  type AssociationDragDropGroupResult,
+  type AssociationDragDropResultDetails
+} from "./evaluateAssociationDragDrop.js";
+export {
   evaluateClassificationQcm,
   type ClassificationQcmData,
   type ClassificationQcmQuestion,
