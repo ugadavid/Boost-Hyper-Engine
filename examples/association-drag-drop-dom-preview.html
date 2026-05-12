@@ -118,6 +118,10 @@
         width: 150px;
       }
 
+      .bhe-association-drag-drop__item .bhe-content-unit video {
+        width: 150px;
+      }
+
       .bhe-association-drag-drop__item .bhe-content-unit__label,
       .bhe-association-drag-drop__item figcaption {
         color: #5f6b7a;
@@ -255,8 +259,21 @@
                   id: "unit-creative-audio",
                   kind: "audio",
                   label: "creative audio",
-                  src: "https://example.com/audio/creative.mp3",
+                  src: "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3",
                   transcript: "creative"
+                }
+              },
+              {
+                id: "creative-video",
+                kind: "video",
+                label: "creative video",
+                unit: {
+                  id: "unit-creative-video",
+                  kind: "video",
+                  label: "creative video",
+                  src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm",
+                  poster: "https://placehold.co/160x100?text=Video",
+                  transcript: "short creative video"
                 }
               }
             ],
@@ -273,8 +290,8 @@
               },
               {
                 id: "text-image-audio-zone",
-                entryIds: ["creative-text", "creative-image", "creative-audio"],
-                feedback: "Group the word, image, and audio."
+                entryIds: ["creative-text", "creative-image", "creative-audio", "creative-video"],
+                feedback: "Group the word, image, audio, and video."
               }
             ]
           }

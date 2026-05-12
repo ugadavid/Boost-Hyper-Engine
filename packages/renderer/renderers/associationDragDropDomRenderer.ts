@@ -40,6 +40,15 @@ function createDraggableItem(item: AssociationDragDropData["draggableItems"][num
   }
 
   element.addEventListener("dragstart", (event) => {
+    const target = event.target;
+    if (
+      target instanceof HTMLElement &&
+      (target.closest("audio") || target.closest("video"))
+    ) {
+      event.preventDefault();
+      return;
+    }
+
     event.dataTransfer?.setData("text/plain", item.entryId);
   });
 
