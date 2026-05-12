@@ -12,6 +12,13 @@ export {
   type ClassificationQcmResultDetails
 } from "./evaluateClassificationQcm.js";
 export {
+  evaluateClassificationDragDrop,
+  type ClassificationDragDropEvaluationData,
+  type ClassificationDragDropExpectedItem,
+  type ClassificationDragDropItemResult,
+  type ClassificationDragDropResultDetails
+} from "./evaluateClassificationDragDrop.js";
+export {
   evaluateGapFillTyping,
   type GapFillBlankResult,
   type GapFillTextSegment,

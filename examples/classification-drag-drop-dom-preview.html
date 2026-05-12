@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BHE Classification Drag-Drop DOM Preview</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #1f2933;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .preview-note {
+        margin: 0 0 24px;
+        color: #5f6b7a;
+      }
+
+      .bhe-classification-drag-drop {
+        padding: 22px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgb(31 41 51 / 8%);
+      }
+
+      .bhe-classification-drag-drop__workspace {
+        display: grid;
+        gap: 18px;
+      }
+
+      .bhe-classification-drag-drop__tray,
+      .bhe-classification-drag-drop__zone-items {
+        min-height: 58px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+        border: 1px dashed #9aa8b7;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .bhe-classification-drag-drop__zones {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+
+      .bhe-classification-drag-drop__zone {
+        padding: 14px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .bhe-classification-drag-drop__zone h3 {
+        margin: 0 0 10px;
+        font-size: 16px;
+      }
+
+      .bhe-classification-drag-drop__zone.contains-correct {
+        border-color: #1f8a4c;
+      }
+
+      .bhe-classification-drag-drop__zone.contains-errors {
+        background: #fff8f7;
+        border-color: #c2413a;
+      }
+
+      .bhe-classification-drag-drop__item {
+        padding: 8px 10px;
+        border: 1px solid #b8c4d1;
+        border-radius: 8px;
+        background: #ffffff;
+        color: inherit;
+        cursor: grab;
+        font: inherit;
+      }
+
+      .bhe-classification-drag-drop__item:active {
+        cursor: grabbing;
+      }
+
+      .bhe-classification-drag-drop__item.is-correct {
+        border-color: #1f8a4c;
+        background: #f0fbf4;
+      }
+
+      .bhe-classification-drag-drop__item.is-incorrect {
+        border-color: #c2413a;
+        background: #fff5f4;
+      }
+
+      .bhe-classification-drag-drop__item.is-missing {
+        border-color: #b26a00;
+        background: #fff8ea;
+      }
+
+      .bhe-classification-drag-drop__item.is-selected {
+        outline: 3px solid #2563eb;
+        outline-offset: 2px;
+      }
+
+      .bhe-classification-drag-drop__move {
+        margin: 0 0 10px;
+        padding: 6px 10px;
+        border: 1px solid #9aa8b7;
+        border-radius: 8px;
+        background: #ffffff;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+      }
+
+      .bhe-classification-drag-drop__announcements {
+        min-height: 20px;
+        margin: 0 0 14px;
+        color: #40566f;
+        font-size: 14px;
+      }
+
+      .bhe-classification-drag-drop__zone-details,
+      .bhe-classification-drag-drop__summary-line {
+        min-height: 20px;
+        margin: 10px 0 0;
+        font-size: 13px;
+        color: #5f6b7a;
+      }
+
+      .bhe-classification-drag-drop__check {
+        margin-top: 18px;
+        padding: 10px 14px;
+        border: 1px solid #2563eb;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+      }
+
+      .bhe-classification-drag-drop__summary,
+      .bhe-classification-drag-drop__feedback {
+        margin-top: 18px;
+      }
+
+      .bhe-feedback {
+        display: grid;
+        gap: 10px;
+      }
+
+      .bhe-feedback__message {
+        padding: 10px 12px;
+        border: 1px solid #d7dee8;
+        border-left-width: 5px;
+        border-radius: 8px;
+        background: #fbfcfe;
+      }
+
+      .bhe-feedback__summary {
+        font-weight: 700;
+      }
+
+      .bhe-feedback__message-text {
+        margin: 0;
+      }
+
+      .bhe-feedback--success {
+        border-left-color: #1f8a4c;
+      }
+
+      .bhe-feedback--info {
+        border-left-color: #2563eb;
+      }
+
+      .bhe-feedback--warning {
+        border-left-color: #b26a00;
+      }
+
+      .bhe-feedback--error {
+        border-left-color: #c2413a;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>BHE Classification Drag-Drop DOM Preview</h1>
+      <p class="preview-note">
+        Temporary native DOM prototype. Drag items, or select an item and use Move here.
+      </p>
+      <div id="app"></div>
+    </main>
+
+    <script type="module">
+      import { classificationDragDropDomRenderer } from "../dist/packages/renderer/renderers/classificationDragDropDomRenderer.js";
+
+      const classificationSet = {
+        kind: "pedagogical-object",
+        pedagogicalFamily: "structural",
+        pedagogicalType: "classification",
+        interactionModes: ["drag-drop"],
+        metadata: {
+          id: "classification-drag-drop-dom",
+          title: "French Gender Classification",
+          language: "fr"
+        },
+        learningGoal: {
+          domain: "languages",
+          skill: "grammar",
+          topic: "gender"
+        },
+        content: {
+          core: {
+            categories: [
+              { id: "masculine", label: "Masculin" },
+              { id: "feminine", label: "Feminin" }
+            ],
+            items: [
+              { id: "item-livre", label: "livre", categoryId: "masculine", kind: "word" },
+              { id: "item-table", label: "table", categoryId: "feminine", kind: "word" },
+              { id: "item-cahier", label: "cahier", categoryId: "masculine", kind: "word" },
+              { id: "item-maison", label: "maison", categoryId: "feminine", kind: "word" }
+            ]
+          }
+        },
+        validate() {
+          return true;
+        }
+      };
+
+      document
+        .getElementById("app")
+        .append(classificationDragDropDomRenderer.renderDom(classificationSet));
+    </script>
+  </body>
+</html>

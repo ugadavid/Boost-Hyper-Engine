@@ -1,6 +1,7 @@
 import { evaluateAssociationDragDrop } from "../../core/evaluators/index.js";
 import type { AssociationDragDropUserInput, AssociationSet } from "../../core/types/index.js";
 import { associationToDragDropData } from "../adapters/associationToDragDropAdapter.js";
+import { renderContentUnit } from "../content/index.js";
 import { mountFeedbackFromResult } from "../feedback/feedbackMounting.js";
 import type { AssociationDragDropData } from "../interaction-data/index.js";
 import type { RendererDefinition } from "../types/RendererDefinition.js";
@@ -29,9 +30,14 @@ function createDraggableItem(item: AssociationDragDropData["draggableItems"][num
   element.type = "button";
   element.className = "bhe-association-drag-drop__item";
   element.draggable = true;
-  element.textContent = item.label;
   element.dataset.entryId = item.entryId;
   element.setAttribute("aria-label", item.label);
+
+  if (item.unit) {
+    element.append(renderContentUnit(item.unit));
+  } else {
+    element.textContent = item.label;
+  }
 
   element.addEventListener("dragstart", (event) => {
     event.dataTransfer?.setData("text/plain", item.entryId);

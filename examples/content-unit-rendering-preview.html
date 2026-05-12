@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BHE ContentUnit Rendering Preview</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #1f2933;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .preview-note {
+        margin: 0 0 24px;
+        color: #5f6b7a;
+      }
+
+      #app {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+      }
+
+      .content-unit-preview__item {
+        padding: 16px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .content-unit-preview__item h2 {
+        margin: 0 0 12px;
+        font-size: 16px;
+      }
+
+      .bhe-content-unit {
+        display: grid;
+        gap: 8px;
+        max-width: 100%;
+      }
+
+      .bhe-content-unit--text {
+        display: inline-block;
+        font-weight: 700;
+      }
+
+      .bhe-content-unit--image {
+        margin: 0;
+      }
+
+      .bhe-content-unit img,
+      .bhe-content-unit video {
+        max-width: 100%;
+        border-radius: 6px;
+      }
+
+      .bhe-content-unit audio {
+        width: 100%;
+      }
+
+      .bhe-content-unit__label,
+      figcaption {
+        color: #5f6b7a;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>BHE ContentUnit Rendering Preview</h1>
+      <p class="preview-note">
+        Temporary preview for text, image, audio, and video ContentUnit rendering.
+      </p>
+      <div id="app"></div>
+    </main>
+
+    <script type="module">
+      import { renderContentUnitExamples } from "../dist/examples/content-unit-rendering-example.js";
+
+      renderContentUnitExamples(document.getElementById("app"));
+    </script>
+  </body>
+</html>

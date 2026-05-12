@@ -32,6 +32,10 @@ function associationEntryToDragDropItem(entry: AssociationEntry): AssociationDra
     label: associationEntryToText(entry)
   };
 
+  if (entry.unit !== undefined) {
+    item.unit = entry.unit;
+  }
+
   if (entry.kind !== undefined) {
     item.kind = entry.kind;
   }

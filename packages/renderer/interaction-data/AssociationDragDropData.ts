@@ -1,6 +1,9 @@
+import type { ContentUnit } from "../../core/types/index.js";
+
 export interface AssociationDragDropItem {
   entryId: string;
   label: string;
+  unit?: ContentUnit;
   kind?: string;
   metadata?: Record<string, unknown>;
 }

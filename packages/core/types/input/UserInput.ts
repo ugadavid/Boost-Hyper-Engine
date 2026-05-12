@@ -25,7 +25,16 @@ export interface AssociationDragDropUserInput extends BaseUserInput {
   }[];
 }
 
+export interface ClassificationDragDropUserInput extends BaseUserInput {
+  interactionMode: "drag-drop";
+  placements: {
+    itemId: string;
+    categoryId: string;
+  }[];
+}
+
 export type UserInput =
   | QcmUserInput
   | ContextualTypingUserInput
-  | AssociationDragDropUserInput;
+  | AssociationDragDropUserInput
+  | ClassificationDragDropUserInput;
