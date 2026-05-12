@@ -132,6 +132,30 @@
         cursor: grabbing;
       }
 
+      .bhe-association-drag-drop__item.is-selected {
+        outline: 3px solid #2563eb;
+        outline-offset: 2px;
+      }
+
+      .bhe-association-drag-drop__move {
+        margin: 0 0 10px;
+        padding: 6px 10px;
+        border: 1px solid #9aa8b7;
+        border-radius: 8px;
+        background: #ffffff;
+        color: inherit;
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+      }
+
+      .bhe-association-drag-drop__announcements {
+        min-height: 20px;
+        margin: 0 0 14px;
+        color: #40566f;
+        font-size: 14px;
+      }
+
       .bhe-association-drag-drop__zone-details {
         min-height: 20px;
         margin: 10px 0 0;
@@ -197,7 +221,7 @@
     <main>
       <h1>BHE Association Drag-Drop DOM Preview</h1>
       <p class="preview-note">
-        Temporary native DOM prototype. Drag items into zones, then click Check.
+        Temporary native DOM prototype. You can drag items, or select an item and use Move here.
       </p>
       <div id="app"></div>
     </main>

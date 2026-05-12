@@ -25,13 +25,17 @@ function createMessage(message: string): HTMLElement {
   return section;
 }
 
-function createDraggableItem(item: AssociationDragDropData["draggableItems"][number]): HTMLElement {
+function createDraggableItem(
+  item: AssociationDragDropData["draggableItems"][number],
+  onSelect: (item: HTMLElement) => void
+): HTMLElement {
   const element = document.createElement("button");
   element.type = "button";
   element.className = "bhe-association-drag-drop__item";
   element.draggable = true;
   element.dataset.entryId = item.entryId;
   element.setAttribute("aria-label", item.label);
+  element.setAttribute("aria-pressed", "false");
 
   if (item.unit) {
     element.append(renderContentUnit(item.unit));
@@ -50,6 +54,16 @@ function createDraggableItem(item: AssociationDragDropData["draggableItems"][num
     }
 
     event.dataTransfer?.setData("text/plain", item.entryId);
+  });
+
+  element.addEventListener("click", () => {
+    onSelect(element);
+  });
+
+  element.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    onSelect(element);
   });
 
   return element;
@@ -94,8 +108,62 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
     section.className = "bhe-association-drag-drop";
     section.dataset.objectId = object.metadata.id;
 
+    let selectedItem: HTMLElement | undefined;
+
     const title = document.createElement("h2");
     title.textContent = object.metadata.title ?? object.metadata.id;
+
+    const announcements = document.createElement("p");
+    announcements.className = "bhe-association-drag-drop__announcements";
+    announcements.setAttribute("aria-live", "polite");
+
+    function selectedItemLabel(item: HTMLElement): string {
+      return item.getAttribute("aria-label") ?? item.textContent ?? "item";
+    }
+
+    function announce(message: string): void {
+      announcements.textContent = message;
+    }
+
+    function clearSelection(): void {
+      selectedItem?.classList.remove("is-selected");
+      selectedItem?.setAttribute("aria-pressed", "false");
+      selectedItem = undefined;
+    }
+
+    function selectItem(item: HTMLElement): void {
+      clearSelection();
+      selectedItem = item;
+      item.classList.add("is-selected");
+      item.setAttribute("aria-pressed", "true");
+      announce(`Selected "${selectedItemLabel(item)}".`);
+    }
+
+    function moveSelectedItemTo(destination: HTMLElement, destinationLabel: string): void {
+      if (!selectedItem) {
+        announce("No item selected.");
+        return;
+      }
+
+      const item = selectedItem;
+      const itemLabel = selectedItemLabel(item);
+      destination.append(item);
+      clearSelection();
+      announce(`Moved "${itemLabel}" to "${destinationLabel}".`);
+    }
+
+    function returnSelectedItemToTray(destination: HTMLElement): void {
+      if (!selectedItem) {
+        announce("No item selected.");
+        return;
+      }
+
+      const item = selectedItem;
+      const itemLabel = selectedItemLabel(item);
+      destination.append(item);
+      clearSelection();
+      announce(`Returned "${itemLabel}" to tray.`);
+    }
 
     const workspace = document.createElement("div");
     workspace.className = "bhe-association-drag-drop__workspace";
@@ -106,11 +174,22 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
 
     enableDrop(tray, (entryId) => {
       const item = section.querySelector<HTMLElement>(`[data-entry-id="${entryId}"]`);
-      if (item) tray.append(item);
+      if (item) {
+        tray.append(item);
+        if (selectedItem === item) clearSelection();
+      }
+    });
+
+    const returnButton = document.createElement("button");
+    returnButton.type = "button";
+    returnButton.className = "bhe-association-drag-drop__move";
+    returnButton.textContent = "Return here";
+    returnButton.addEventListener("click", () => {
+      returnSelectedItemToTray(tray);
     });
 
     for (const item of dragDropData.draggableItems) {
-      tray.append(createDraggableItem(item));
+      tray.append(createDraggableItem(item, selectItem));
     }
 
     const zones = document.createElement("div");
@@ -124,20 +203,31 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
       const zoneTitle = document.createElement("h3");
       zoneTitle.textContent = zoneData.label;
 
+      const moveButton = document.createElement("button");
+      moveButton.type = "button";
+      moveButton.className = "bhe-association-drag-drop__move";
+      moveButton.textContent = "Move here";
+      moveButton.addEventListener("click", () => {
+        moveSelectedItemTo(zoneItems, zoneData.label);
+      });
+
       const zoneItems = document.createElement("div");
       zoneItems.className = "bhe-association-drag-drop__zone-items";
       zoneItems.setAttribute("aria-label", `Drop zone: ${zoneData.label}`);
 
       enableDrop(zoneItems, (entryId) => {
         const item = section.querySelector<HTMLElement>(`[data-entry-id="${entryId}"]`);
-        if (item) zoneItems.append(item);
+        if (item) {
+          zoneItems.append(item);
+          if (selectedItem === item) clearSelection();
+        }
       });
 
       const zoneDetails = document.createElement("p");
       zoneDetails.className = "bhe-association-drag-drop__zone-details";
       zoneDetails.setAttribute("aria-live", "polite");
 
-      zone.append(zoneTitle, zoneItems, zoneDetails);
+      zone.append(zoneTitle, moveButton, zoneItems, zoneDetails);
       zones.append(zone);
     }
 
@@ -179,8 +269,8 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
       mountFeedbackFromResult({ result, container: feedbackContainer });
     });
 
-    workspace.append(tray, zones);
-    section.append(title, workspace, checkButton, feedbackContainer);
+    workspace.append(returnButton, tray, zones);
+    section.append(title, announcements, workspace, checkButton, feedbackContainer);
     return section;
   }
 };
