@@ -26,3 +26,9 @@ export {
   type GapFillTypingData,
   type GapFillTypingResultDetails
 } from "./evaluateGapFillTyping.js";
+export {
+  evaluateSequenceReorder,
+  type SequenceAdjacentPairResult,
+  type SequenceExactPositionResult,
+  type SequenceReorderResultDetails
+} from "./evaluateSequenceReorder.js";

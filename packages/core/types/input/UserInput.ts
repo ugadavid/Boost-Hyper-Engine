@@ -33,8 +33,16 @@ export interface ClassificationDragDropUserInput extends BaseUserInput {
   }[];
 }
 
+export interface SequenceReorderUserInput {
+  kind: "sequence-reorder";
+  orderedItemIds: string[];
+  timestamp?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export type UserInput =
   | QcmUserInput
   | ContextualTypingUserInput
   | AssociationDragDropUserInput
-  | ClassificationDragDropUserInput;
+  | ClassificationDragDropUserInput
+  | SequenceReorderUserInput;

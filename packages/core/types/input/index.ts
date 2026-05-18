@@ -4,5 +4,6 @@ export type {
   ClassificationDragDropUserInput,
   ContextualTypingUserInput,
   QcmUserInput,
+  SequenceReorderUserInput,
   UserInput
 } from "./UserInput.js";

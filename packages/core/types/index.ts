@@ -52,6 +52,7 @@ export type {
   ClassificationDragDropUserInput,
   ContextualTypingUserInput,
   QcmUserInput,
+  SequenceReorderUserInput,
   UserInput
 } from "./input/index.js";
 export type {
@@ -60,6 +61,10 @@ export type {
   InferenceSet,
   InferenceSetCore
 } from "./InferenceSet.js";
+export type {
+  SequenceReorderData,
+  SequenceReorderItem
+} from "./interaction-data/index.js";
 export type { InteractionMode } from "./InteractionMode.js";
 export type { PedagogicalContent, PedagogicalVariant } from "./PedagogicalContent.js";
 export type { PedagogicalFamily } from "./PedagogicalFamily.js";
