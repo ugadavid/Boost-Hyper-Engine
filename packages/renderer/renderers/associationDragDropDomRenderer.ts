@@ -2,6 +2,7 @@ import { evaluateAssociationDragDrop } from "../../core/evaluators/index.js";
 import type { AssociationDragDropUserInput, AssociationSet } from "../../core/types/index.js";
 import { associationToDragDropData } from "../adapters/associationToDragDropAdapter.js";
 import { renderContentUnit } from "../content/index.js";
+import { createSelectionMoveController } from "../dom/selectionMove.js";
 import { mountFeedbackFromResult } from "../feedback/feedbackMounting.js";
 import type { AssociationDragDropData } from "../interaction-data/index.js";
 import type { RendererDefinition } from "../types/RendererDefinition.js";
@@ -108,8 +109,6 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
     section.className = "bhe-association-drag-drop";
     section.dataset.objectId = object.metadata.id;
 
-    let selectedItem: HTMLElement | undefined;
-
     const title = document.createElement("h2");
     title.textContent = object.metadata.title ?? object.metadata.id;
 
@@ -125,45 +124,10 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
       announcements.textContent = message;
     }
 
-    function clearSelection(): void {
-      selectedItem?.classList.remove("is-selected");
-      selectedItem?.setAttribute("aria-pressed", "false");
-      selectedItem = undefined;
-    }
-
-    function selectItem(item: HTMLElement): void {
-      clearSelection();
-      selectedItem = item;
-      item.classList.add("is-selected");
-      item.setAttribute("aria-pressed", "true");
-      announce(`Selected "${selectedItemLabel(item)}".`);
-    }
-
-    function moveSelectedItemTo(destination: HTMLElement, destinationLabel: string): void {
-      if (!selectedItem) {
-        announce("No item selected.");
-        return;
-      }
-
-      const item = selectedItem;
-      const itemLabel = selectedItemLabel(item);
-      destination.append(item);
-      clearSelection();
-      announce(`Moved "${itemLabel}" to "${destinationLabel}".`);
-    }
-
-    function returnSelectedItemToTray(destination: HTMLElement): void {
-      if (!selectedItem) {
-        announce("No item selected.");
-        return;
-      }
-
-      const item = selectedItem;
-      const itemLabel = selectedItemLabel(item);
-      destination.append(item);
-      clearSelection();
-      announce(`Returned "${itemLabel}" to tray.`);
-    }
+    const selectionMove = createSelectionMoveController({
+      announce,
+      getItemLabel: selectedItemLabel
+    });
 
     const workspace = document.createElement("div");
     workspace.className = "bhe-association-drag-drop__workspace";
@@ -176,7 +140,7 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
       const item = section.querySelector<HTMLElement>(`[data-entry-id="${entryId}"]`);
       if (item) {
         tray.append(item);
-        if (selectedItem === item) clearSelection();
+        selectionMove.clearSelectionIfSelected(item);
       }
     });
 
@@ -185,11 +149,11 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
     returnButton.className = "bhe-association-drag-drop__move";
     returnButton.textContent = "Return here";
     returnButton.addEventListener("click", () => {
-      returnSelectedItemToTray(tray);
+      selectionMove.returnSelectedItemToTray(tray);
     });
 
     for (const item of dragDropData.draggableItems) {
-      tray.append(createDraggableItem(item, selectItem));
+      tray.append(createDraggableItem(item, selectionMove.selectItem));
     }
 
     const zones = document.createElement("div");
@@ -208,7 +172,7 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
       moveButton.className = "bhe-association-drag-drop__move";
       moveButton.textContent = "Move here";
       moveButton.addEventListener("click", () => {
-        moveSelectedItemTo(zoneItems, zoneData.label);
+        selectionMove.moveSelectedItemTo(zoneItems, zoneData.label);
       });
 
       const zoneItems = document.createElement("div");
@@ -219,7 +183,7 @@ export const associationDragDropDomRenderer: DomRendererDefinition = {
         const item = section.querySelector<HTMLElement>(`[data-entry-id="${entryId}"]`);
         if (item) {
           zoneItems.append(item);
-          if (selectedItem === item) clearSelection();
+          selectionMove.clearSelectionIfSelected(item);
         }
       });
 

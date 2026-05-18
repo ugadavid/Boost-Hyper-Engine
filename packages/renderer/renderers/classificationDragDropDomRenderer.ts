@@ -1,6 +1,7 @@
 import { evaluateClassificationDragDrop } from "../../core/evaluators/index.js";
 import type { ClassificationDragDropUserInput, ClassificationSet } from "../../core/types/index.js";
 import { classificationToDragDropData } from "../adapters/classificationToDragDropAdapter.js";
+import { createSelectionMoveController } from "../dom/selectionMove.js";
 import { mountFeedbackFromResult } from "../feedback/feedbackMounting.js";
 import type { ClassificationDragDropData } from "../interaction-data/index.js";
 import type { RendererDefinition } from "../types/RendererDefinition.js";
@@ -101,8 +102,6 @@ export const classificationDragDropDomRenderer: DomRendererDefinition = {
     section.className = "bhe-classification-drag-drop";
     section.dataset.objectId = object.metadata.id;
 
-    let selectedItem: HTMLElement | undefined;
-
     const title = document.createElement("h2");
     title.textContent = object.metadata.title ?? object.metadata.id;
 
@@ -114,45 +113,7 @@ export const classificationDragDropDomRenderer: DomRendererDefinition = {
       announcements.textContent = message;
     }
 
-    function clearSelection(): void {
-      selectedItem?.classList.remove("is-selected");
-      selectedItem?.setAttribute("aria-pressed", "false");
-      selectedItem = undefined;
-    }
-
-    function selectItem(item: HTMLElement): void {
-      clearSelection();
-      selectedItem = item;
-      item.classList.add("is-selected");
-      item.setAttribute("aria-pressed", "true");
-      announce(`Selected "${item.textContent ?? "item"}".`);
-    }
-
-    function moveSelectedItemTo(destination: HTMLElement, destinationLabel: string): void {
-      if (!selectedItem) {
-        announce("No item selected.");
-        return;
-      }
-
-      const item = selectedItem;
-      const itemLabel = item.textContent ?? "item";
-      destination.append(item);
-      clearSelection();
-      announce(`Moved "${itemLabel}" to "${destinationLabel}".`);
-    }
-
-    function returnSelectedItemToTray(destination: HTMLElement): void {
-      if (!selectedItem) {
-        announce("No item selected.");
-        return;
-      }
-
-      const item = selectedItem;
-      const itemLabel = item.textContent ?? "item";
-      destination.append(item);
-      clearSelection();
-      announce(`Returned "${itemLabel}" to tray.`);
-    }
+    const selectionMove = createSelectionMoveController({ announce });
 
     const workspace = document.createElement("div");
     workspace.className = "bhe-classification-drag-drop__workspace";
@@ -165,7 +126,7 @@ export const classificationDragDropDomRenderer: DomRendererDefinition = {
       const item = section.querySelector<HTMLElement>(`[data-item-id="${itemId}"]`);
       if (item) {
         tray.append(item);
-        if (selectedItem === item) clearSelection();
+        selectionMove.clearSelectionIfSelected(item);
       }
     });
 
@@ -174,11 +135,11 @@ export const classificationDragDropDomRenderer: DomRendererDefinition = {
     returnButton.className = "bhe-classification-drag-drop__move";
     returnButton.textContent = "Return here";
     returnButton.addEventListener("click", () => {
-      returnSelectedItemToTray(tray);
+      selectionMove.returnSelectedItemToTray(tray);
     });
 
     for (const item of dragDropData.draggableItems) {
-      tray.append(createDraggableItem(item, selectItem));
+      tray.append(createDraggableItem(item, selectionMove.selectItem));
     }
 
     const zones = document.createElement("div");
@@ -197,7 +158,7 @@ export const classificationDragDropDomRenderer: DomRendererDefinition = {
       moveButton.className = "bhe-classification-drag-drop__move";
       moveButton.textContent = "Move here";
       moveButton.addEventListener("click", () => {
-        moveSelectedItemTo(zoneItems, zoneData.label);
+        selectionMove.moveSelectedItemTo(zoneItems, zoneData.label);
       });
 
       const zoneItems = document.createElement("div");
@@ -208,7 +169,7 @@ export const classificationDragDropDomRenderer: DomRendererDefinition = {
         const item = section.querySelector<HTMLElement>(`[data-item-id="${itemId}"]`);
         if (item) {
           zoneItems.append(item);
-          if (selectedItem === item) clearSelection();
+          selectionMove.clearSelectionIfSelected(item);
         }
       });
 
