@@ -39,6 +39,28 @@ export interface InferenceEvidence {
   metadata?: Record<string, unknown>;
 }
 
+export interface InferenceChoice {
+  /**
+   * Stable choice identifier.
+   */
+  id: string;
+
+  /**
+   * Human-readable choice label.
+   */
+  label: string;
+
+  /**
+   * Whether this choice is an expected inference.
+   */
+  isExpected?: boolean;
+
+  /**
+   * Optional choice-specific feedback.
+   */
+  feedback?: string;
+}
+
 export interface InferencePrompt {
   /**
    * Stable prompt identifier.
@@ -69,6 +91,11 @@ export interface InferencePrompt {
    * Evidence identifiers that can support this inference.
    */
   evidenceIds?: string[];
+
+  /**
+   * Optional structured choices for QCM or justified-choice inference activities.
+   */
+  choices?: InferenceChoice[];
 
   /**
    * Optional hint.

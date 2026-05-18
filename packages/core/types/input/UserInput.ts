@@ -40,9 +40,18 @@ export interface SequenceReorderUserInput {
   metadata?: Record<string, unknown>;
 }
 
+export interface InferenceJustifiedChoiceUserInput {
+  kind: "inference-justified-choice";
+  selectedChoiceId: string;
+  justification?: string;
+  timestamp?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export type UserInput =
   | QcmUserInput
   | ContextualTypingUserInput
   | AssociationDragDropUserInput
   | ClassificationDragDropUserInput
+  | InferenceJustifiedChoiceUserInput
   | SequenceReorderUserInput;

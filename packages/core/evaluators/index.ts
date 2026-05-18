@@ -27,6 +27,10 @@ export {
   type GapFillTypingResultDetails
 } from "./evaluateGapFillTyping.js";
 export {
+  evaluateInferenceJustifiedChoice,
+  type InferenceJustifiedChoiceResultDetails
+} from "./evaluateInferenceJustifiedChoice.js";
+export {
   evaluateSequenceReorder,
   type SequenceAdjacentPairResult,
   type SequenceExactPositionResult,

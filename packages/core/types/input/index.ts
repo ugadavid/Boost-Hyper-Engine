@@ -3,6 +3,7 @@ export type {
   BaseUserInput,
   ClassificationDragDropUserInput,
   ContextualTypingUserInput,
+  InferenceJustifiedChoiceUserInput,
   QcmUserInput,
   SequenceReorderUserInput,
   UserInput

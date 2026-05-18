@@ -51,17 +51,21 @@ export type {
   BaseUserInput,
   ClassificationDragDropUserInput,
   ContextualTypingUserInput,
+  InferenceJustifiedChoiceUserInput,
   QcmUserInput,
   SequenceReorderUserInput,
   UserInput
 } from "./input/index.js";
 export type {
+  InferenceChoice,
   InferenceEvidence,
   InferencePrompt,
   InferenceSet,
   InferenceSetCore
 } from "./InferenceSet.js";
 export type {
+  InferenceChoiceOption,
+  InferenceChoiceData,
   SequenceReorderData,
   SequenceReorderItem
 } from "./interaction-data/index.js";
