@@ -51,6 +51,7 @@ export type {
   BaseUserInput,
   ClassificationDragDropUserInput,
   ContextualTypingUserInput,
+  IdentificationSelectionUserInput,
   InferenceJustifiedChoiceUserInput,
   QcmUserInput,
   SequenceReorderUserInput,
@@ -64,6 +65,8 @@ export type {
   InferenceSetCore
 } from "./InferenceSet.js";
 export type {
+  IdentificationSelectionData,
+  IdentificationSelectionTarget,
   InferenceChoiceOption,
   InferenceChoiceData,
   SequenceReorderData,

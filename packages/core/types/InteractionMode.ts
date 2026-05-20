@@ -4,4 +4,5 @@ export type InteractionMode =
   | "flashcards"
   | "typing"
   | "qcm"
-  | "reorder";
+  | "reorder"
+  | "selection";

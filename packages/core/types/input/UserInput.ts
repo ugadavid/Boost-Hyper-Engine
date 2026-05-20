@@ -48,10 +48,18 @@ export interface InferenceJustifiedChoiceUserInput {
   metadata?: Record<string, unknown>;
 }
 
+export interface IdentificationSelectionUserInput {
+  kind: "identification-selection";
+  selectedTargetIds: string[];
+  timestamp?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export type UserInput =
   | QcmUserInput
   | ContextualTypingUserInput
   | AssociationDragDropUserInput
   | ClassificationDragDropUserInput
+  | IdentificationSelectionUserInput
   | InferenceJustifiedChoiceUserInput
   | SequenceReorderUserInput;

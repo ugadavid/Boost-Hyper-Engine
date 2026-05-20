@@ -27,6 +27,10 @@ export {
   type GapFillTypingResultDetails
 } from "./evaluateGapFillTyping.js";
 export {
+  evaluateIdentificationSelection,
+  type IdentificationSelectionResultDetails
+} from "./evaluateIdentificationSelection.js";
+export {
   evaluateInferenceJustifiedChoice,
   type InferenceJustifiedChoiceResultDetails
 } from "./evaluateInferenceJustifiedChoice.js";
