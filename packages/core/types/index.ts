@@ -55,6 +55,7 @@ export type {
   InferenceJustifiedChoiceUserInput,
   QcmUserInput,
   SequenceReorderUserInput,
+  TransformationTypingUserInput,
   UserInput
 } from "./input/index.js";
 export type {
@@ -70,7 +71,9 @@ export type {
   InferenceChoiceOption,
   InferenceChoiceData,
   SequenceReorderData,
-  SequenceReorderItem
+  SequenceReorderItem,
+  TransformationInteractionData,
+  TransformationInteractionItem
 } from "./interaction-data/index.js";
 export type { InteractionMode } from "./InteractionMode.js";
 export type { PedagogicalContent, PedagogicalVariant } from "./PedagogicalContent.js";

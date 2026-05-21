@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BHE Transformation Typing DOM Preview</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #1f2933;
+      }
+
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+      }
+
+      .preview-note {
+        margin: 0 0 24px;
+        color: #5f6b7a;
+      }
+
+      .bhe-transformation-typing {
+        padding: 22px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgb(31 41 51 / 8%);
+      }
+
+      .bhe-transformation-typing h2 {
+        margin: 0 0 16px;
+      }
+
+      .bhe-transformation-typing__items {
+        display: grid;
+        gap: 14px;
+      }
+
+      .bhe-transformation-typing__item {
+        display: grid;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid #d7dee8;
+        border-radius: 8px;
+        background: #fbfcfe;
+      }
+
+      .bhe-transformation-typing__item.is-correct {
+        border-color: #1f8a4c;
+        background: #f0fbf4;
+      }
+
+      .bhe-transformation-typing__item.is-incorrect {
+        border-color: #c2413a;
+        background: #fff5f4;
+      }
+
+      .bhe-transformation-typing__label,
+      .bhe-transformation-typing__input-label {
+        display: block;
+        margin-bottom: 4px;
+        color: #536170;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .bhe-transformation-typing__source,
+      .bhe-transformation-typing__operation {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .bhe-transformation-typing__source {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .bhe-transformation-typing__type {
+        display: inline-block;
+        margin: 8px 0 0;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #e8eef7;
+        color: #36485c;
+        font-size: 13px;
+      }
+
+      .bhe-transformation-typing__answer-block {
+        display: grid;
+        gap: 6px;
+      }
+
+      .bhe-transformation-typing__input {
+        width: min(100%, 520px);
+        box-sizing: border-box;
+        padding: 9px 10px;
+        border: 1px solid #b8c4d1;
+        border-radius: 6px;
+        font: inherit;
+      }
+
+      .bhe-transformation-typing__item.is-correct .bhe-transformation-typing__input {
+        border-color: #1f8a4c;
+      }
+
+      .bhe-transformation-typing__item.is-incorrect .bhe-transformation-typing__input {
+        border-color: #c2413a;
+      }
+
+      .bhe-transformation-typing__item-feedback {
+        min-height: 18px;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .bhe-transformation-typing__item-feedback[data-status="correct"] {
+        color: #1f8a4c;
+      }
+
+      .bhe-transformation-typing__item-feedback[data-status="incorrect"] {
+        color: #c2413a;
+      }
+
+      .bhe-transformation-typing__check {
+        margin-top: 18px;
+        padding: 10px 14px;
+        border: 1px solid #2563eb;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+      }
+
+      .bhe-transformation-typing__feedback {
+        margin-top: 18px;
+      }
+
+      .bhe-feedback {
+        display: grid;
+        gap: 10px;
+      }
+
+      .bhe-feedback__messages {
+        display: grid;
+        gap: 8px;
+      }
+
+      .bhe-feedback__message {
+        padding: 10px 12px;
+        border: 1px solid #d7dee8;
+        border-left-width: 5px;
+        border-radius: 8px;
+        background: #fbfcfe;
+      }
+
+      .bhe-feedback__summary {
+        font-weight: 700;
+      }
+
+      .bhe-feedback__message-text {
+        margin: 0;
+      }
+
+      .bhe-feedback--success {
+        border-left-color: #1f8a4c;
+      }
+
+      .bhe-feedback--info {
+        border-left-color: #2563eb;
+      }
+
+      .bhe-feedback--warning {
+        border-left-color: #b26a00;
+      }
+
+      .bhe-feedback--error {
+        border-left-color: #c2413a;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>BHE Transformation Typing DOM Preview</h1>
+      <p class="preview-note">
+        Temporary DOM renderer prototype. Transform each source according to the operation, then click Check.
+      </p>
+      <div id="app"></div>
+    </main>
+
+    <script type="module">
+      import { transformationTypingDomRenderer } from "../dist/packages/renderer/renderers/transformationTypingDomRenderer.js";
+
+      const transformationSet = {
+        kind: "pedagogical-object",
+        type: "transformation-set",
+        pedagogicalFamily: "productive",
+        pedagogicalType: "transformation",
+        metadata: {
+          id: "transformation-typing-dom",
+          title: "Transformation Typing V0",
+          language: "en",
+          level: "A2"
+        },
+        learningGoal: {
+          domain: "English",
+          skill: "form transformation",
+          topic: "grammar and register",
+          cefr: "A2"
+        },
+        content: {
+          core: {
+            items: [
+              {
+                id: "tense-simple-present-to-past",
+                source: "I walk to school.",
+                expected: "I walked to school.",
+                transformationType: "tense",
+                instruction: "Transform the sentence into the simple past.",
+                hint: "Look at the verb."
+              },
+              {
+                id: "gender-number-french-adjective",
+                source: "un étudiant sérieux",
+                expected: "des étudiantes sérieuses",
+                transformationType: "gender-number",
+                instruction: "Transform the phrase into feminine plural.",
+                hint: "Both the noun and adjective must agree."
+              },
+              {
+                id: "register-informal-to-formal",
+                source: "Can you send me the file?",
+                expected: "Could you please send me the file?",
+                accepted: ["Would you please send me the file?"],
+                transformationType: "register",
+                instruction: "Reformulate the sentence in a more polite register.",
+                hint: "Use a polite modal expression."
+              }
+            ],
+            allowMultipleAnswers: true,
+            caseSensitive: false,
+            accentSensitive: true
+          }
+        },
+        interactionModes: ["typing"],
+        validate() {
+          return this.content.core.items.length > 0;
+        }
+      };
+
+      document
+        .getElementById("app")
+        .append(transformationTypingDomRenderer.renderDom(transformationSet));
+    </script>
+  </body>
+</html>

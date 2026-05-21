@@ -18,6 +18,12 @@ export interface TransformationItem {
   expected: string;
 
   /**
+   * Additional accepted variants. The expected value remains the canonical or
+   * preferred target.
+   */
+  accepted?: string[];
+
+  /**
    * Optional item-specific instruction.
    */
   instruction?: string;

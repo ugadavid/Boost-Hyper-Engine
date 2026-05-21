@@ -7,5 +7,6 @@ export type {
   InferenceJustifiedChoiceUserInput,
   QcmUserInput,
   SequenceReorderUserInput,
+  TransformationTypingUserInput,
   UserInput
 } from "./UserInput.js";

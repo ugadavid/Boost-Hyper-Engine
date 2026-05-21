@@ -40,3 +40,8 @@ export {
   type SequenceExactPositionResult,
   type SequenceReorderResultDetails
 } from "./evaluateSequenceReorder.js";
+export {
+  evaluateTransformationTyping,
+  type TransformationTypingItemResult,
+  type TransformationTypingResultDetails
+} from "./evaluateTransformationTyping.js";

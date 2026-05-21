@@ -55,6 +55,16 @@ export interface IdentificationSelectionUserInput {
   metadata?: Record<string, unknown>;
 }
 
+export interface TransformationTypingUserInput {
+  kind: "transformation-typing";
+  attempts: {
+    itemId: string;
+    value: string;
+  }[];
+  timestamp?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export type UserInput =
   | QcmUserInput
   | ContextualTypingUserInput
@@ -62,4 +72,5 @@ export type UserInput =
   | ClassificationDragDropUserInput
   | IdentificationSelectionUserInput
   | InferenceJustifiedChoiceUserInput
-  | SequenceReorderUserInput;
+  | SequenceReorderUserInput
+  | TransformationTypingUserInput;

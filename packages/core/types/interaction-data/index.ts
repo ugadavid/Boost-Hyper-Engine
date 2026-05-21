@@ -10,3 +10,7 @@ export type {
   SequenceReorderData,
   SequenceReorderItem
 } from "./SequenceReorderData.js";
+export type {
+  TransformationInteractionData,
+  TransformationInteractionItem
+} from "./TransformationInteractionData.js";
