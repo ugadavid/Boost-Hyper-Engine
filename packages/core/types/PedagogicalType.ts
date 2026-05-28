@@ -5,4 +5,5 @@ export type PedagogicalType =
   | "transformation"
   | "gap-fill"
   | "identification"
-  | "inference";
+  | "inference"
+  | "memorization";

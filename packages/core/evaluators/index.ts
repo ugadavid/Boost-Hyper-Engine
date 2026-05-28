@@ -35,6 +35,11 @@ export {
   type InferenceJustifiedChoiceResultDetails
 } from "./evaluateInferenceJustifiedChoice.js";
 export {
+  evaluateMemorizationTypingRecall,
+  type MemorizationTypingRecallItemResult,
+  type MemorizationTypingRecallResultDetails
+} from "./evaluateMemorizationTypingRecall.js";
+export {
   evaluateSequenceReorder,
   type SequenceAdjacentPairResult,
   type SequenceExactPositionResult,

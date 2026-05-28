@@ -5,6 +5,7 @@ export type {
   ContextualTypingUserInput,
   IdentificationSelectionUserInput,
   InferenceJustifiedChoiceUserInput,
+  MemorizationTypingRecallUserInput,
   QcmUserInput,
   SequenceReorderUserInput,
   TransformationTypingUserInput,

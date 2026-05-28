@@ -65,6 +65,16 @@ export interface TransformationTypingUserInput {
   metadata?: Record<string, unknown>;
 }
 
+export interface MemorizationTypingRecallUserInput {
+  kind: "memorization-typing-recall";
+  attempts: {
+    itemId: string;
+    value: string;
+  }[];
+  timestamp?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export type UserInput =
   | QcmUserInput
   | ContextualTypingUserInput
@@ -72,5 +82,6 @@ export type UserInput =
   | ClassificationDragDropUserInput
   | IdentificationSelectionUserInput
   | InferenceJustifiedChoiceUserInput
+  | MemorizationTypingRecallUserInput
   | SequenceReorderUserInput
   | TransformationTypingUserInput;

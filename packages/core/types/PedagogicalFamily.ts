@@ -1,4 +1,5 @@
 export type PedagogicalFamily =
   | "structural"
   | "productive"
-  | "interpretive";
+  | "interpretive"
+  | "retentive";

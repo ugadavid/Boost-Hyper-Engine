@@ -53,6 +53,7 @@ export type {
   ContextualTypingUserInput,
   IdentificationSelectionUserInput,
   InferenceJustifiedChoiceUserInput,
+  MemorizationTypingRecallUserInput,
   QcmUserInput,
   SequenceReorderUserInput,
   TransformationTypingUserInput,
@@ -70,12 +71,19 @@ export type {
   IdentificationSelectionTarget,
   InferenceChoiceOption,
   InferenceChoiceData,
+  MemorizationTypingRecallData,
+  MemorizationTypingRecallItem,
   SequenceReorderData,
   SequenceReorderItem,
   TransformationInteractionData,
   TransformationInteractionItem
 } from "./interaction-data/index.js";
 export type { InteractionMode } from "./InteractionMode.js";
+export type {
+  MemorizationItem,
+  MemorizationSet,
+  MemorizationSetCore
+} from "./MemorizationSet.js";
 export type { PedagogicalContent, PedagogicalVariant } from "./PedagogicalContent.js";
 export type { PedagogicalFamily } from "./PedagogicalFamily.js";
 export type { PedagogicalObject } from "./PedagogicalObject.js";

@@ -7,6 +7,10 @@ export type {
   InferenceChoiceData
 } from "./InferenceChoiceData.js";
 export type {
+  MemorizationTypingRecallData,
+  MemorizationTypingRecallItem
+} from "./MemorizationTypingRecallData.js";
+export type {
   SequenceReorderData,
   SequenceReorderItem
 } from "./SequenceReorderData.js";
