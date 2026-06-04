@@ -34,6 +34,7 @@ export type {
   ClassificationSet,
   ClassificationSetCore
 } from "./ClassificationSet.js";
+export type { CognitiveOperation } from "./CognitiveOperation.js";
 export type { DragDropData, DragDropItem, DragDropTarget } from "./DragDropData.js";
 export type {
   FeedbackData,

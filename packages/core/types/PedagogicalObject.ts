@@ -1,4 +1,5 @@
 import type { BHEObject } from "./BHEObject.js";
+import type { CognitiveOperation } from "./CognitiveOperation.js";
 import type { InteractionMode } from "./InteractionMode.js";
 import type { PedagogicalContent } from "./PedagogicalContent.js";
 import type { PedagogicalFamily } from "./PedagogicalFamily.js";
@@ -17,4 +18,5 @@ export interface PedagogicalObject<TCore = unknown>
   };
   content: PedagogicalContent<TCore>;
   interactionModes: InteractionMode[];
+  cognitiveOperations?: CognitiveOperation[];
 }
