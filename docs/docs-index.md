@@ -178,6 +178,15 @@ L’index ne modifie pas le statut réel du projet. Il cartographie ce que les d
 | Catalog Application - Thinking In English | `docs/architecture/20260618_catalog-application_thinking-in-english.md` | Application du catalogue | Expérimental | Applique le catalogue à Thinking in English ; verdict implicite : le catalogue aide l’identification, mais pas encore la représentation. |
 | Representation Recipes Exploration | `docs/architecture/20260618_representation-recipes-exploration.md` | Couche intermédiaire provisoire | Expérimental | Explore l’idée de recettes entre Pedagogical Use et BHE Representation. Conclusion : partiellement utile. |
 | RepresentationPath Implementation Report | `docs/architecture/20260618_representation-path-implementation-report.md` | Prototype authoring | Expérimental | Rapport du prototype `RepresentationPath` dans `packages/authoring`. Indique explicitement qu’il ne stabilise aucune architecture core. |
+| Author Discovery Playground V0 Report | `docs/architecture/20260622_author-discovery-playground-v0-report.md` | Playground auteur | Expérimental | Premier prototype manipulable reliant intention auteur, PedagogicalUse, RepresentationPath, BHE Representation et exemple corpus. |
+| Author Discovery Playground V0.1 Report | `docs/architecture/20260622_author-discovery-playground-v0-1-report.md` | Couverture authoring | Expérimental | Ajoute les niveaux READY / PLAUSIBLE / MISSING BRIDGE pour rendre visible où l’authoring est mature ou encore incomplet. |
+| Explore Before The Rule Investigation | `docs/architecture/20260622_explore-before-the-rule-investigation.md` | Enquête orchestration auteur | Expérimental | Vérifie si `Explore Before The Rule` existe déjà dans la documentation. Conclusion : plutôt une orchestration auteur-visible qu’un nouveau concept core. |
+| Explore Before The Rule Orchestration Path Report | `docs/architecture/20260622_explore-before-the-rule-orchestration-path-report.md` | AuthorOrchestrationPath | Expérimental | Matérialise `Explore Before The Rule` comme chemin d’orchestration authoring-only, sans le réduire à un `RepresentationPath` unique. |
+| Compare Investigation | `docs/architecture/20260622_compare-investigation.md` | Enquête Compare | Expérimental | Montre que `Compare` est une intention auteur transversale pouvant emprunter plusieurs chemins BHE existants, pas un `PedagogicalUse` unique. |
+| Compare Clarification Path Report | `docs/architecture/20260622_compare-clarification-path-report.md` | Clarification auteur Compare | Expérimental | Ajoute la question `What are learners comparing?` et route Compare vers Categories, Relations, Forms, Hypotheses, Order ou Strategies/Habits. |
+| Compare Clarification Real Bricks Validation | `docs/architecture/20260622_compare-clarification-real-bricks-validation.md` | Validation corpus Compare | Expérimental | Teste la clarification sur Countable/Uncountable, Passive Voice et Thinking in English. Verdict : utile mais incomplet. |
+| Authoring To Interactive Examples Report | `docs/architecture/20260622_authoring-to-interactive-examples-report.md` | Exemples interactifs authoring | Expérimental | Ajoute des mini-interactions locales aux validations pour rendre visible la chaîne jusqu’au geste apprenant, sans stabiliser de runtime. |
+| Real BHE Path Validation Report | `docs/architecture/20260622_real-bhe-path-validation-report.md` | Validation branchement moteur | Référence | Mesure honnêtement où la chaîne authoring atteint le moteur réel : Classification et Transformation sont connectés ; la sélection réflexive reste partielle. |
 
 ## POCs et expérimentations
 
@@ -192,6 +201,10 @@ L’index ne modifie pas le statut réel du projet. Il cartographie ce que les d
 | ContentUnit DOM Rendering Exploration | `docs/reports/content-unit-dom-rendering-exploration.md` | Exploration rendu multimodal | Expérimental | Exploration de rendu multimodal avant stabilisation plus large. |
 | GapFillSet Methodological Rereading | `docs/reports/gap-fill-set-methodological-rereading.md` | Relecture méthodologique | À relire | Document de relecture plutôt que décision finale. |
 | Beci Full Adaptive Pathway Report | `docs/reports/beci-full-adaptive-pathway-report.md` | Parcours adaptatif | Expérimental | Expérimentation complète autour d’un parcours adaptatif. |
+| Author Discovery Playground V0/V0.1 | `docs/architecture/20260622_author-discovery-playground-v0-report.md` et `docs/architecture/20260622_author-discovery-playground-v0-1-report.md` | POC expérience auteur | Expérimental | POC manipulable pour tester la découvrabilité auteur et la couverture READY / PLAUSIBLE / MISSING BRIDGE. |
+| Compare Clarification Real Bricks Validation | `docs/architecture/20260622_compare-clarification-real-bricks-validation.md` | POC validation corpus | Expérimental | Valide la clarification Compare sur trois briques réelles et montre que la question de clarification route effectivement l’auteur. |
+| Authoring To Interactive Examples Report | `docs/architecture/20260622_authoring-to-interactive-examples-report.md` | POC exemples interactifs | Expérimental | Ferme la chaîne démonstrative par des mini-interactions authoring-only, explicitement rollbackables. |
+| Real BHE Path Validation Report | `docs/architecture/20260622_real-bhe-path-validation-report.md` | POC branchement réel | Référence | Teste le remplacement des démos par de vrais chemins BHE existants et identifie deux chemins connectés plus un chemin partiel. |
 
 ## Archives et documents historiques
 
@@ -232,10 +245,19 @@ Parcours de lecture recommandé, limité aux documents réellement utiles pour r
 8. `docs/architecture/20260618_representation-path-implementation-report.md`  
    Comprendre le prototype expérimental `RepresentationPath`, son périmètre et ses limites.
 
-9. `docs/architecture/20260618_representation-recipes-exploration.md`  
+9. `docs/architecture/20260622_author-discovery-playground-v0-report.md`  
+   Comprendre la première matérialisation manipulable de l’expérience auteur.
+
+10. `docs/architecture/20260622_compare-clarification-path-report.md`  
+    Comprendre comment une intention auteur large comme `Compare` devient une question de clarification plutôt qu’un chemin unique.
+
+11. `docs/architecture/20260622_real-bhe-path-validation-report.md`  
+    Comprendre jusqu’où les chemins authoring atteignent réellement le moteur BHE aujourd’hui.
+
+12. `docs/architecture/20260618_representation-recipes-exploration.md`  
    Comprendre pourquoi une couche intermédiaire est utile mais encore partielle.
 
-10. `docs/architecture/20260605_boost-english-corpus-cartography.md`  
+13. `docs/architecture/20260605_boost-english-corpus-cartography.md`  
     Voir le terrain réel : le corpus Boost’English qui force les questions d’architecture.
 
 Lecture complémentaire utile selon chantier :
@@ -243,7 +265,7 @@ Lecture complémentaire utile selon chantier :
 - Pour renderers/evaluators : `docs/reports/return-loop-architecture-synthesis.md`, `docs/reports/evaluators-comparative-analysis.md`, `docs/reports/dom-renderers-comparative-analysis.md`.
 - Pour typing : `docs/reports/typing-gesture-cognitive-operations-comparison.md`.
 - Pour drag-drop : `docs/reports/drag-drop-generalization-arbitration.md`.
-- Pour authoring : `docs/architecture/20260618_authoring-thinking-in-english.md` et `docs/architecture/20260618_catalog-application_thinking-in-english.md`.
+- Pour authoring : `docs/architecture/20260618_authoring-thinking-in-english.md`, `docs/architecture/20260618_catalog-application_thinking-in-english.md`, `docs/architecture/20260622_explore-before-the-rule-orchestration-path-report.md` et `docs/architecture/20260622_compare-clarification-real-bricks-validation.md`.
 
 ## Concepts aujourd’hui stabilisés
 
@@ -260,6 +282,10 @@ Les éléments suivants semblent relativement établis dans l’état documentai
 - Existence d’une couche `packages/authoring` expérimentale distincte du core.
 - `PedagogicalUse` comme vocabulaire auteur expérimental mais utile.
 - `RepresentationPath` comme prototype expérimental de traduction auteur, situé dans `packages/authoring`, sans stabilisation d’une nouvelle architecture core.
+- `Author Discovery Playground` comme outil expérimental de découvrabilité auteur, situé dans `packages/authoring`.
+- `AuthorOrchestrationPath` comme piste authoring-only utile pour des phénomènes multi-étapes comme `Explore Before The Rule`, sans statut core.
+- `Compare Clarification` comme pattern authoring prudent : `Compare` n’est pas un chemin mais une intention qui demande `What are learners comparing?`.
+- La validation récente montre que certains chemins authoring atteignent déjà le moteur réel : `Categories -> ClassificationSet` et `Before / After Forms -> TransformationSet`.
 
 ## Questions encore ouvertes
 
@@ -268,10 +294,13 @@ Les sujets suivants restent visiblement en exploration :
 - Comment rendre l’expérience auteur réellement fluide sans masquer les distinctions structurantes du core.
 - Jusqu’où formaliser les Pedagogical Uses sans créer une taxonomie trop rigide.
 - Comment valider les `RepresentationPath` : simple documentation, tests de cohérence, ou futur assistant auteur.
+- Comment valider les `AuthorOrchestrationPath` sans les transformer en nouvelle couche architecturale prématurée.
 - Comment passer d’un usage pédagogique à une représentation BHE sans “recette” trop mécanique.
 - Où placer les usages non évaluatifs : dans les types existants, via conventions, ou via nouveaux patterns.
 - Comment exposer `completed` comme résultat légitime sans le confondre avec une réussite évaluative.
+- Comment créer un vrai chemin non évaluatif de sélection réflexive : l’exemple Thinking in English atteint `IdentificationSelectionData` et `BHEResult.completed`, mais pas encore un renderer/evaluator non correctif.
 - Quelle interface d’édition permettrait de choisir entre interaction shape, intention, opération cognitive et résultat attendu.
+- Comment poursuivre la clarification auteur pour des intentions larges comme Compare sans créer des `CompareThrough...` stabilisés trop tôt.
 - Quels concepts issus des explorations Moment / PedagogicalTransition / LearningSequence doivent rester descriptifs, et lesquels méritent un futur support structurel.
 - Comment maintenir l’équilibre entre helpers communs et renderers pédagogiquement spécialisés.
 - Comment articuler AdaptiveRouting et lancement de parcours sans créer trop tôt un runtime orchestrateur.
@@ -284,6 +313,10 @@ Le core paraît relativement stabilisé sur ses grandes séparations, mais pas f
 
 Le corpus Boost’English joue un rôle décisif. Il révèle que les primitives BHE couvrent beaucoup de situations réelles, mais aussi que la lecture “développeur core” n’est pas suffisante pour un auteur. Les briques réelles ne demandent pas seulement “quel type d’exercice ?”, mais “que veut-on faire vivre ou comprendre à l’apprenant ?”.
 
-La zone la plus active est désormais l’authoring. Le `PedagogicalUseCatalog` aide à identifier l’intention ou l’usage pédagogique, mais le passage vers les structures BHE reste encore partiellement implicite. L’exploration `Representation Recipes`, puis le prototype `RepresentationPath`, matérialisent ce pont sans modifier le core. Ce prototype semble utile précisément parce qu’il rend visible la traduction : usage pédagogique → forme d’interaction → UserInput → politique d’évaluation → BHEResult.
+La zone la plus active est désormais l’authoring. Le `PedagogicalUseCatalog` aide à identifier l’intention ou l’usage pédagogique, mais le passage vers les structures BHE reste encore partiellement implicite. L’exploration `Representation Recipes`, puis le prototype `RepresentationPath`, matérialisent ce pont sans modifier le core. Le `Author Discovery Playground` rend ce pont manipulable : intention auteur → clarification éventuelle → PedagogicalUse → RepresentationPath ou AuthorOrchestrationPath → mapping BHE → exemple.
 
-Les prochains grands chantiers visibles sont donc moins dans l’ajout de primitives core que dans la découvrabilité, l’expérience auteur et la validation des chemins de représentation. BHE semble entrer dans une phase où la question principale devient : comment permettre à un auteur de penser pédagogiquement tout en produisant des structures BHE cohérentes, sans transformer l’authoring en surcouche opaque ou en nouvelle architecture prématurée.
+Les travaux du 22 juin 2026 ont précisé cette direction. `Explore Before The Rule` semble être une orchestration auteur-visible plutôt qu’un nouveau concept core. `Compare` semble être une intention auteur qui doit d’abord être clarifiée par la question `What are learners comparing?`. La validation sur Countable / Uncountable, Passive Voice et Thinking in English montre que cette clarification aide réellement à router l’auteur.
+
+La validation la plus récente a aussi mesuré le lien réel avec le moteur. Deux chemins atteignent déjà des structures BHE complètes : `Categories -> ClassificationSet` et `Before / After Forms -> TransformationSet`. En revanche, `Strategies / Habits -> Reflect Through Selection` reste partiel : les carriers `IdentificationSelectionData` et `IdentificationSelectionUserInput` existent, et `BHEResult.completed` est disponible, mais le renderer/evaluator existant est correctif. Le point de rupture actuel est donc très précis : la sélection réflexive non évaluative.
+
+Les prochains grands chantiers visibles sont donc moins dans l’ajout de primitives core que dans la découvrabilité, l’expérience auteur, la clarification des intentions larges et la validation des chemins de représentation. BHE semble entrer dans une phase où la question principale devient : comment permettre à un auteur de penser pédagogiquement tout en produisant des structures BHE cohérentes, sans transformer l’authoring en surcouche opaque ou en nouvelle architecture prématurée.

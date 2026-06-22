@@ -1,7 +1,17 @@
+import { identificationToSelectionData } from "../../core/adapters/index.js";
+import { renderClassificationDragDropDom } from "../../renderer/renderers/classificationDragDropDomRenderer.js";
+import { renderTransformationTypingDom } from "../../renderer/renderers/transformationTypingDomRenderer.js";
 import { authorOrchestrationPaths } from "./AuthorOrchestrationPaths.js";
 import { pedagogicalUseCatalog } from "./PedagogicalUseCatalog.js";
 import { representationPaths } from "./RepresentationPaths.js";
 import type { AuthorOrchestrationPath } from "./AuthorOrchestrationPath.js";
+import type {
+  BHEResult,
+  ClassificationSet,
+  IdentificationSelectionUserInput,
+  IdentificationSet,
+  TransformationSet
+} from "../../core/types/index.js";
 import type { PedagogicalUse } from "./PedagogicalUse.js";
 import type { RepresentationPath } from "./RepresentationPath.js";
 
@@ -11,6 +21,36 @@ export interface AuthorDiscoveryIntent {
   description: string;
   pedagogicalUseIds: readonly string[];
 }
+
+export interface CompareClarificationOption {
+  id: string;
+  label: string;
+  examples: readonly string[];
+  suggestedPedagogicalUseIds: readonly string[];
+  suggestedRepresentationPathIds: readonly string[];
+  bheMapping: string;
+  explanation: string;
+  limits: readonly string[];
+}
+
+export interface CompareValidationExample {
+  id: string;
+  brick: string;
+  bhePathStatus: BHEPathConnectionStatus;
+  bhePathStatusReason: string;
+  clarificationOptionId: string;
+  clarificationChoice: string;
+  alternativeChoices: readonly string[];
+  suggestedPedagogicalUseIds: readonly string[];
+  suggestedRepresentationPathIds: readonly string[];
+  bheMapping: string;
+  argument: string;
+}
+
+export type BHEPathConnectionStatus =
+  | "real-bhe-path"
+  | "partial-bhe-path"
+  | "demo-only";
 
 export interface AuthorDiscoveryExample {
   id: string;
@@ -115,6 +155,184 @@ export const authorDiscoveryIntents = [
     ]
   }
 ] as const satisfies readonly AuthorDiscoveryIntent[];
+
+export const compareClarificationOptions = [
+  {
+    id: "categories",
+    label: "Categories",
+    examples: [
+      "countable vs uncountable",
+      "comparative vs superlative",
+      "-ed vs -ing"
+    ],
+    suggestedPedagogicalUseIds: [
+      "practice-through-controlled-interaction",
+      "explore-before-rule"
+    ],
+    suggestedRepresentationPathIds: ["explore-before-rule"],
+    bheMapping: "ClassificationSet",
+    explanation:
+      "Choose this when comparison helps learners decide which category an example belongs to.",
+    limits: [
+      "Use ClassificationSet when categories are stable.",
+      "Use Explore Before The Rule when categories are still emerging."
+    ]
+  },
+  {
+    id: "relations",
+    label: "Relations",
+    examples: [
+      "positive vs negative adjective",
+      "word ↔ image",
+      "concept ↔ example"
+    ],
+    suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
+    suggestedRepresentationPathIds: [],
+    bheMapping: "AssociationSet",
+    explanation:
+      "Choose this when comparison helps learners see what belongs together or contrasts meaningfully.",
+    limits: [
+      "The BHE object is clear when the relation is explicit.",
+      "No dedicated authoring RepresentationPath is documented yet."
+    ]
+  },
+  {
+    id: "before-after-forms",
+    label: "Before / After Forms",
+    examples: [
+      "active ↔ passive",
+      "present ↔ past",
+      "source ↔ transformed form"
+    ],
+    suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
+    suggestedRepresentationPathIds: [],
+    bheMapping: "TransformationSet",
+    explanation:
+      "Choose this when comparison is about a source form becoming a target form through a rule or operation.",
+    limits: [
+      "TransformationSet is the likely BHE carrier.",
+      "The authoring path is still less visible than the core representation."
+    ]
+  },
+  {
+    id: "hypotheses",
+    label: "Hypotheses",
+    examples: [
+      "possible rule",
+      "possible interpretation",
+      "possible explanation"
+    ],
+    suggestedPedagogicalUseIds: ["explore-before-rule"],
+    suggestedRepresentationPathIds: ["explore-before-rule"],
+    bheMapping: "InferenceSet",
+    explanation:
+      "Choose this when learners compare possible explanations before stabilizing an interpretation or rule.",
+    limits: [
+      "InferenceSet can carry hypothesis work.",
+      "Explore Before The Rule is an orchestration path, not a single RepresentationPath."
+    ]
+  },
+  {
+    id: "order",
+    label: "Order",
+    examples: [
+      "process",
+      "workflow",
+      "timeline",
+      "dialogue reconstruction"
+    ],
+    suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
+    suggestedRepresentationPathIds: [],
+    bheMapping: "SequenceSet",
+    explanation:
+      "Choose this when comparison is about before, after, adjacency, progression, or ordering.",
+    limits: [
+      "SequenceSet is clear when order itself is meaningful.",
+      "Do not use order merely to make a static list interactive."
+    ]
+  },
+  {
+    id: "strategies-habits",
+    label: "Strategies / Habits",
+    examples: [
+      "learning strategies",
+      "translation habits",
+      "self-reflection"
+    ],
+    suggestedPedagogicalUseIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    suggestedRepresentationPathIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    bheMapping: "Reflective authoring path using selection or typing",
+    explanation:
+      "Choose this when learners compare their own habits, strategies, confidence, or self-position.",
+    limits: [
+      "The result is usually completion, not correctness.",
+      "The author must choose whether selection or typing best captures the reflection."
+    ]
+  }
+] as const satisfies readonly CompareClarificationOption[];
+
+export const compareValidationExamples = [
+  {
+    id: "countable-uncountable-compare-validation",
+    brick: "Countable / Uncountable — I Learn",
+    bhePathStatus: "real-bhe-path",
+    bhePathStatusReason:
+      "ClassificationSet, drag-drop InteractionData, DOM renderer, and evaluator are all available.",
+    clarificationOptionId: "categories",
+    clarificationChoice: "Categories",
+    alternativeChoices: ["Hypotheses"],
+    suggestedPedagogicalUseIds: [
+      "practice-through-controlled-interaction",
+      "explore-before-rule"
+    ],
+    suggestedRepresentationPathIds: ["explore-before-rule"],
+    bheMapping: "ClassificationSet, with InferenceSet visible during discovery",
+    argument:
+      "The dominant comparison is countable vs uncountable category membership. Hypotheses remains important because learners first test the distinction before it is stabilized."
+  },
+  {
+    id: "passive-voice-compare-validation",
+    brick: "Passive Voice",
+    bhePathStatus: "real-bhe-path",
+    bhePathStatusReason:
+      "TransformationSet, adapter, TransformationInteractionData, DOM renderer, and evaluator are all available.",
+    clarificationOptionId: "before-after-forms",
+    clarificationChoice: "Before / After Forms",
+    alternativeChoices: ["Categories", "Hypotheses"],
+    suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
+    suggestedRepresentationPathIds: [],
+    bheMapping: "TransformationSet",
+    argument:
+      "The most natural route is active form to passive form, with a visible source-to-target relation. Categories can support recognition, and hypotheses may appear in critical-reading extensions."
+  },
+  {
+    id: "thinking-in-english-compare-validation",
+    brick: "Thinking in English",
+    bhePathStatus: "partial-bhe-path",
+    bhePathStatusReason:
+      "RepresentationPath, IdentificationSelectionData, UserInput, and BHEResult.completed can be expressed, but the existing renderer/evaluator is corrective rather than non-evaluative.",
+    clarificationOptionId: "strategies-habits",
+    clarificationChoice: "Strategies / Habits",
+    alternativeChoices: ["Categories"],
+    suggestedPedagogicalUseIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    suggestedRepresentationPathIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    bheMapping: "Reflective authoring path using selection or typing",
+    argument:
+      "Learners compare habits, confidence, and translation strategies rather than correct answers. Reflect Through Selection is the clearest first path; Reflect Through Typing can extend it."
+  }
+] as const satisfies readonly CompareValidationExample[];
 
 export const authorDiscoveryExamples = [
   {
@@ -316,20 +534,26 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
   let selectedIntentId: string = authorDiscoveryIntents[0]?.id ?? "";
   let selectedUseId =
     getAuthorDiscoveryUsesForIntent(selectedIntentId)[0]?.use.id ?? "";
+  let selectedCompareOptionId: string = compareClarificationOptions[0]?.id ?? "";
 
   const render = (): void => {
     const selectedIntent = authorDiscoveryIntents.find(
       (intent) => intent.id === selectedIntentId
     );
+    const isCompareIntent = selectedIntentId === "compare";
     const useViews = getAuthorDiscoveryUsesForIntent(selectedIntentId);
     const selectedUseView =
       useViews.find((view) => view.use.id === selectedUseId) ?? useViews[0];
+    const selectedCompareOption =
+      compareClarificationOptions.find(
+        (option) => option.id === selectedCompareOptionId
+      ) ?? compareClarificationOptions[0];
 
     root.replaceChildren();
     root.className = "author-discovery-playground";
 
     const title = document.createElement("h1");
-    title.textContent = "Author Discovery Playground V0.2";
+    title.textContent = "Author Discovery Playground V0.3";
 
     const subtitle = document.createElement("p");
     subtitle.className = "adp-subtitle";
@@ -342,8 +566,16 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
     layout.className = "adp-layout";
 
     const intentPanel = renderIntentPanel(selectedIntentId);
-    const usePanel = renderUsePanel(useViews, selectedUseView?.use.id);
-    const detailPanel = renderDetailPanel(selectedIntent, selectedUseView);
+    const usePanel = isCompareIntent
+      ? renderCompareClarificationPanel(
+          compareClarificationOptions,
+          selectedCompareOption?.id
+        )
+      : renderUsePanel(useViews, selectedUseView?.use.id);
+    const detailPanel =
+      isCompareIntent && selectedCompareOption
+        ? renderCompareDetailPanel(selectedIntent, selectedCompareOption)
+        : renderDetailPanel(selectedIntent, selectedUseView);
 
     layout.append(intentPanel, usePanel, detailPanel);
     root.append(title, subtitle, coverage, layout);
@@ -360,10 +592,22 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
       selectedIntentId = button.dataset.intentId ?? selectedIntentId;
       selectedUseId =
         getAuthorDiscoveryUsesForIntent(selectedIntentId)[0]?.use.id ?? "";
+      selectedCompareOptionId = compareClarificationOptions[0]?.id ?? "";
       render();
     });
 
     usePanel.addEventListener("click", (event) => {
+      const compareButton = (event.target as Element).closest<HTMLButtonElement>(
+        "button[data-compare-option-id]"
+      );
+
+      if (compareButton) {
+        selectedCompareOptionId =
+          compareButton.dataset.compareOptionId ?? selectedCompareOptionId;
+        render();
+        return;
+      }
+
       const button = (event.target as Element).closest<HTMLButtonElement>(
         "button[data-use-id]"
       );
@@ -460,6 +704,48 @@ function renderUsePanel(
   return panel;
 }
 
+function renderCompareClarificationPanel(
+  options: readonly CompareClarificationOption[],
+  selectedOptionId?: string
+): HTMLElement {
+  const panel = document.createElement("section");
+  panel.className = "adp-panel";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "2. What are learners comparing?";
+
+  const intro = document.createElement("p");
+  intro.className = "adp-panel-note";
+  intro.textContent =
+    "Compare is not a path yet. Choose the thing being compared first.";
+
+  panel.append(heading, intro);
+
+  for (const option of options) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.compareOptionId = option.id;
+    button.className =
+      option.id === selectedOptionId ? "adp-card is-selected" : "adp-card";
+
+    const label = document.createElement("span");
+    label.className = "adp-card-title";
+    label.textContent = option.label;
+
+    const examples = document.createElement("span");
+    examples.textContent = option.examples.join(" · ");
+
+    const mapping = document.createElement("span");
+    mapping.className = "adp-pill is-muted";
+    mapping.textContent = option.bheMapping;
+
+    button.append(label, examples, mapping);
+    panel.append(button);
+  }
+
+  return panel;
+}
+
 function renderDetailPanel(
   selectedIntent: AuthorDiscoveryIntent | undefined,
   selectedUseView: AuthorDiscoveryUseView | undefined
@@ -503,6 +789,572 @@ function renderDetailPanel(
   panel.append(renderExamples(selectedUseView.examples));
 
   return panel;
+}
+
+function renderCompareDetailPanel(
+  selectedIntent: AuthorDiscoveryIntent | undefined,
+  selectedOption: CompareClarificationOption
+): HTMLElement {
+  const panel = document.createElement("section");
+  panel.className = "adp-panel adp-detail";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "3. Clarification path";
+  panel.append(heading);
+
+  if (!selectedIntent) {
+    const empty = document.createElement("p");
+    empty.textContent = "Choose an intent to begin.";
+    panel.append(empty);
+    return panel;
+  }
+
+  panel.append(
+    renderBlock(
+      "Intent",
+      "Compare",
+      "Compare is an incomplete author intention. The playground asks what learners are comparing before suggesting a BHE path."
+    ),
+    renderBlock(
+      "Clarification",
+      selectedOption.label,
+      selectedOption.explanation
+    ),
+    renderCompareExamples(selectedOption),
+    renderCompareSuggestedUses(selectedOption),
+    renderCompareMapping(selectedOption),
+    renderCompareValidationExamples()
+  );
+
+  return panel;
+}
+
+function renderCompareExamples(
+  option: CompareClarificationOption
+): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Examples";
+
+  const list = document.createElement("ul");
+  list.className = "adp-notes";
+
+  for (const example of option.examples) {
+    const item = document.createElement("li");
+    item.textContent = example;
+    list.append(item);
+  }
+
+  block.append(label, list);
+  return block;
+}
+
+function renderCompareSuggestedUses(
+  option: CompareClarificationOption
+): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Suggested Pedagogical Use";
+
+  const list = document.createElement("div");
+  list.className = "adp-suggested-list";
+
+  for (const useId of option.suggestedPedagogicalUseIds) {
+    const use = useById.get(useId);
+
+    if (!use) {
+      continue;
+    }
+
+    const item = document.createElement("div");
+    item.className = "adp-suggested-card";
+
+    const heading = document.createElement("h3");
+    heading.textContent = use.label;
+
+    const description = document.createElement("p");
+    description.textContent = use.description;
+
+    const confidence = getRepresentationConfidenceForUse(use.id);
+    const badge = document.createElement("span");
+    badge.className = `adp-pill ${getConfidenceClass(confidence)}`;
+    badge.textContent = confidence.badge;
+
+    item.append(heading, description, badge);
+    list.append(item);
+  }
+
+  block.append(label, list);
+  return block;
+}
+
+function renderCompareMapping(option: CompareClarificationOption): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Suggested RepresentationPath and BHE mapping";
+
+  const steps = document.createElement("ol");
+  steps.className = "adp-path";
+
+  const suggestedUseLabels = option.suggestedPedagogicalUseIds
+    .map((useId) => useById.get(useId)?.label)
+    .filter((label): label is string => Boolean(label));
+
+  const pathLabels = option.suggestedRepresentationPathIds.map((pathId) => {
+    const path = pathByUseId.get(pathId);
+    const orchestrationPath = orchestrationPathByUseId.get(pathId);
+
+    if (path) {
+      return `RepresentationPath: ${pathId}`;
+    }
+
+    if (orchestrationPath) {
+      return `AuthorOrchestrationPath: ${orchestrationPath.title}`;
+    }
+
+    return pathId;
+  });
+
+  const values: readonly (readonly [string, string])[] = [
+    ["Author Intent", "Compare"],
+    ["Clarification Question", "What are learners comparing?"],
+    ["Chosen Category", option.label],
+    [
+      "Suggested Pedagogical Use",
+      suggestedUseLabels.join(" / ") || "No existing Pedagogical Use identified"
+    ],
+    [
+      "Suggested RepresentationPath",
+      pathLabels.join(" / ") || "No documented RepresentationPath yet"
+    ],
+    ["BHE Mapping", option.bheMapping]
+  ];
+
+  for (const [stepLabel, value] of values) {
+    const item = document.createElement("li");
+    const strong = document.createElement("strong");
+    strong.textContent = stepLabel;
+    const span = document.createElement("span");
+    span.textContent = value;
+    item.append(strong, span);
+    steps.append(item);
+  }
+
+  const limitsTitle = document.createElement("h3");
+  limitsTitle.textContent = "Visible limits";
+
+  const limits = document.createElement("ul");
+  limits.className = "adp-notes";
+
+  for (const limit of option.limits) {
+    const item = document.createElement("li");
+    item.textContent = limit;
+    limits.append(item);
+  }
+
+  block.append(label, steps, limitsTitle, limits);
+  return block;
+}
+
+function renderCompareValidationExamples(): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Real Validation Examples";
+
+  const intro = document.createElement("p");
+  intro.textContent =
+    "Three Boost'English bricks used to test whether the clarification actually routes the author.";
+
+  const list = document.createElement("div");
+  list.className = "adp-validation-list";
+
+  for (const example of compareValidationExamples) {
+    const item = document.createElement("div");
+    item.className = "adp-validation-card";
+
+    const title = document.createElement("h3");
+    title.textContent = example.brick;
+
+    const status = document.createElement("p");
+    status.className = `adp-real-path-status ${getBHEPathStatusClass(
+      example.bhePathStatus
+    )}`;
+    status.textContent = `${getBHEPathStatusBadge(example.bhePathStatus)} — ${
+      example.bhePathStatusReason
+    }`;
+
+    const rows = document.createElement("dl");
+    rows.className = "adp-step-mapping";
+
+    const suggestedUseLabels = example.suggestedPedagogicalUseIds
+      .map((useId) => useById.get(useId)?.label)
+      .filter((useLabel): useLabel is string => Boolean(useLabel));
+
+    const pathLabels = example.suggestedRepresentationPathIds.map((pathId) => {
+      const path = pathByUseId.get(pathId);
+      const orchestrationPath = orchestrationPathByUseId.get(pathId);
+
+      if (path) {
+        return `RepresentationPath: ${pathId}`;
+      }
+
+      if (orchestrationPath) {
+        return `AuthorOrchestrationPath: ${orchestrationPath.title}`;
+      }
+
+      return pathId;
+    });
+
+    const values: readonly (readonly [string, string])[] = [
+      ["Clarification choice", example.clarificationChoice],
+      [
+        "Alternatives",
+        example.alternativeChoices.join(" / ") || "No strong alternative"
+      ],
+      [
+        "Suggested Pedagogical Use",
+        suggestedUseLabels.join(" / ") || "No existing Pedagogical Use identified"
+      ],
+      [
+        "Suggested RepresentationPath",
+        pathLabels.join(" / ") || "No documented RepresentationPath yet"
+      ],
+      ["BHE mapping", example.bheMapping]
+    ];
+
+    for (const [term, detail] of values) {
+      const dt = document.createElement("dt");
+      dt.textContent = term;
+      const dd = document.createElement("dd");
+      dd.textContent = detail;
+      rows.append(dt, dd);
+    }
+
+    const argument = document.createElement("p");
+    argument.className = "adp-example-reading";
+    argument.textContent = example.argument;
+
+    item.append(title, status, rows, argument, renderInteractiveExample(example));
+    list.append(item);
+  }
+
+  block.append(label, intro, list);
+  return block;
+}
+
+function getBHEPathStatusBadge(status: BHEPathConnectionStatus): string {
+  if (status === "real-bhe-path") {
+    return "🟢 Real BHE Path";
+  }
+
+  if (status === "partial-bhe-path") {
+    return "🟡 Partial BHE Path";
+  }
+
+  return "🔴 Demo Only";
+}
+
+function getBHEPathStatusClass(status: BHEPathConnectionStatus): string {
+  if (status === "real-bhe-path") {
+    return "is-real";
+  }
+
+  if (status === "partial-bhe-path") {
+    return "is-partial";
+  }
+
+  return "is-demo";
+}
+
+function renderInteractiveExample(example: CompareValidationExample): HTMLElement {
+  if (example.id === "countable-uncountable-compare-validation") {
+    return renderCountableUncountableDemo();
+  }
+
+  if (example.id === "passive-voice-compare-validation") {
+    return renderPassiveVoiceDemo();
+  }
+
+  if (example.id === "thinking-in-english-compare-validation") {
+    return renderThinkingInEnglishDemo();
+  }
+
+  const empty = document.createElement("div");
+  empty.className = "adp-demo";
+  empty.textContent = "No demo interactive example is attached to this validation yet.";
+  return empty;
+}
+
+function renderDemoShell(
+  titleText: string,
+  routeText: string
+): {
+  shell: HTMLElement;
+  body: HTMLElement;
+  feedback: HTMLElement;
+} {
+  const shell = document.createElement("div");
+  shell.className = "adp-demo";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Interactive Example";
+
+  const title = document.createElement("h4");
+  title.textContent = titleText;
+
+  const route = document.createElement("p");
+  route.className = "adp-demo-route";
+  route.textContent = routeText;
+
+  const body = document.createElement("div");
+  body.className = "adp-demo-body";
+
+  const feedback = document.createElement("p");
+  feedback.className = "adp-demo-feedback";
+  feedback.textContent = "Demo ready.";
+
+  shell.append(label, title, route, body, feedback);
+  return { shell, body, feedback };
+}
+
+const countableUncountableClassificationSet: ClassificationSet = {
+  kind: "pedagogical-object",
+  pedagogicalFamily: "structural",
+  pedagogicalType: "classification",
+  interactionModes: ["drag-drop", "qcm"],
+  metadata: {
+    id: "countable-uncountable-real-bhe-demo",
+    title: "Countable / Uncountable"
+  },
+  learningGoal: {
+    domain: "english",
+    skill: "grammar",
+    topic: "countable and uncountable nouns"
+  },
+  content: {
+    core: {
+      categories: [
+        { id: "countable", label: "Countable" },
+        { id: "uncountable", label: "Uncountable" }
+      ],
+      items: [
+        { id: "apple", label: "apple", categoryId: "countable", kind: "word" },
+        { id: "water", label: "water", categoryId: "uncountable", kind: "word" },
+        {
+          id: "banana",
+          label: "banana",
+          categoryId: "countable",
+          kind: "word"
+        },
+        { id: "milk", label: "milk", categoryId: "uncountable", kind: "word" },
+        {
+          id: "information",
+          label: "information",
+          categoryId: "uncountable",
+          kind: "word"
+        },
+        { id: "chair", label: "chair", categoryId: "countable", kind: "word" }
+      ]
+    }
+  },
+  cognitiveOperations: ["compare", "classify"],
+  validate() {
+    return (
+      this.content.core.categories.length > 0 &&
+      this.content.core.items.every((item) =>
+        this.content.core.categories.some((category) => category.id === item.categoryId)
+      )
+    );
+  }
+};
+
+const passiveVoiceTransformationSet: TransformationSet = {
+  kind: "pedagogical-object",
+  pedagogicalFamily: "productive",
+  pedagogicalType: "transformation",
+  interactionModes: ["typing"],
+  metadata: {
+    id: "passive-voice-real-bhe-demo",
+    title: "Passive Voice"
+  },
+  learningGoal: {
+    domain: "english",
+    skill: "grammar",
+    topic: "passive voice"
+  },
+  content: {
+    core: {
+      items: [
+        {
+          id: "active-to-passive-1",
+          source: "The technician repaired the machine.",
+          expected: "The machine was repaired by the technician.",
+          instruction: "Transform into passive voice.",
+          transformationType: "active-to-passive"
+        }
+      ],
+      caseSensitive: false
+    }
+  },
+  cognitiveOperations: ["compare", "transform", "produce"],
+  validate() {
+    return this.content.core.items.length > 0;
+  }
+};
+
+const thinkingInEnglishIdentificationSet: IdentificationSet = {
+  kind: "pedagogical-object",
+  pedagogicalFamily: "interpretive",
+  pedagogicalType: "identification",
+  interactionModes: ["selection"],
+  metadata: {
+    id: "thinking-in-english-partial-bhe-demo",
+    title: "Thinking in English"
+  },
+  learningGoal: {
+    domain: "english",
+    skill: "speaking",
+    topic: "thinking directly in English"
+  },
+  content: {
+    core: {
+      context: "Select the statements that describe you.",
+      selectionMode: "multiple",
+      targets: [
+        {
+          id: "translate-every-sentence",
+          label: "I translate every sentence in my head before speaking."
+        },
+        {
+          id: "sometimes-direct-english",
+          label: "I can sometimes think directly in English."
+        },
+        {
+          id: "prepare-chunks",
+          label: "I prepare useful chunks before speaking."
+        },
+        {
+          id: "blocked-by-translations",
+          label: "I feel blocked when I search for exact translations."
+        }
+      ]
+    }
+  },
+  cognitiveOperations: ["compare", "reflect", "selfAdjust"],
+  validate() {
+    return this.content.core.targets.length > 0;
+  }
+};
+
+function renderCountableUncountableDemo(): HTMLElement {
+  const { shell, body, feedback } = renderDemoShell(
+    "Real ClassificationSet renderer",
+    "Route: Compare -> Categories -> ClassificationSet -> classification drag/drop renderer -> evaluator"
+  );
+
+  const instruction = document.createElement("p");
+  instruction.textContent =
+    "This example instantiates a real ClassificationSet and renders it with the existing classification drag/drop DOM renderer. The renderer calls the existing evaluator when Check is pressed.";
+
+  const rendered = renderClassificationDragDropDom(
+    countableUncountableClassificationSet
+  );
+  feedback.textContent =
+    "Connected: ClassificationSet, drag/drop InteractionData, renderer, evaluator.";
+
+  body.append(instruction, rendered);
+  return shell;
+}
+
+function renderPassiveVoiceDemo(): HTMLElement {
+  const { shell, body, feedback } = renderDemoShell(
+    "Real TransformationSet renderer",
+    "Route: Compare -> Before / After Forms -> TransformationSet -> TransformationInteractionData -> renderer -> evaluator"
+  );
+
+  const instruction = document.createElement("p");
+  instruction.textContent =
+    "This example instantiates a real TransformationSet and renders it with the existing transformation typing DOM renderer. The renderer adapts to TransformationInteractionData and calls the existing evaluator when Check is pressed.";
+
+  const rendered = renderTransformationTypingDom(passiveVoiceTransformationSet);
+  feedback.textContent =
+    "Connected: TransformationSet, adapter, InteractionData, renderer, evaluator.";
+
+  body.append(instruction, rendered);
+  return shell;
+}
+
+function renderThinkingInEnglishDemo(): HTMLElement {
+  const { shell, body, feedback } = renderDemoShell(
+    "Partial BHE selection path",
+    "Route: Compare -> Strategies / Habits -> Reflect Through Selection -> IdentificationSelectionData + UserInput -> BHEResult.completed"
+  );
+
+  const selectionData = identificationToSelectionData(
+    thinkingInEnglishIdentificationSet
+  );
+
+  const instruction = document.createElement("p");
+  instruction.textContent =
+    "This example uses a real IdentificationSet adapter to produce IdentificationSelectionData, then records IdentificationSelectionUserInput. It does not use the existing Identification evaluator because that evaluator is corrective; this reflective path needs completion semantics.";
+
+  const list = document.createElement("div");
+  list.className = "adp-demo-checkboxes";
+
+  const updateFeedback = (): void => {
+    const selectedTargetIds = Array.from(
+      list.querySelectorAll<HTMLInputElement>(
+      "input[type='checkbox']:checked"
+      )
+    ).map((input) => input.value);
+    const input: IdentificationSelectionUserInput = {
+      kind: "identification-selection",
+      timestamp: new Date().toISOString(),
+      selectedTargetIds
+    };
+    const result: BHEResult<{ selectedTargetIds: string[] }> = {
+      objectId: thinkingInEnglishIdentificationSet.metadata.id,
+      status: "completed",
+      completion: 1,
+      details: {
+        selectedTargetIds: input.selectedTargetIds
+      }
+    };
+
+    feedback.textContent = `Partial path: ${input.selectedTargetIds.length} selected. Emitted ${result.status}; no corrective evaluator used.`;
+  };
+
+  for (const target of selectionData.targets) {
+    const label = document.createElement("label");
+    label.className = "adp-demo-checkbox";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = target.targetId;
+    checkbox.addEventListener("change", updateFeedback);
+
+    const text = document.createElement("span");
+    text.textContent = target.label;
+
+    label.append(checkbox, text);
+    list.append(label);
+  }
+
+  body.append(instruction, list);
+  return shell;
 }
 
 function renderConfidence(confidence: RepresentationConfidence): HTMLElement {

@@ -12,12 +12,17 @@ export type {
   AuthorCoverageStats,
   AuthorDiscoveryIntent,
   AuthorDiscoveryUseView,
+  BHEPathConnectionStatus,
+  CompareClarificationOption,
+  CompareValidationExample,
   RepresentationConfidence,
   RepresentationConfidenceLevel
 } from "./AuthorDiscoveryPlayground.js";
 export {
   authorDiscoveryExamples,
   authorDiscoveryIntents,
+  compareClarificationOptions,
+  compareValidationExamples,
   getAuthorCoverageStats,
   getAuthorDiscoveryUsesForIntent,
   getRepresentationConfidenceForUse,
