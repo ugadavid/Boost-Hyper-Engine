@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Author Discovery Playground V0</title>
+    <style>
+      :root {
+        color: #162033;
+        background: #f6f3ee;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      main {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 32px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .adp-subtitle {
+        color: #536071;
+        font-size: 1.05rem;
+      }
+
+      .adp-layout {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.9fr) minmax(260px, 1fr) minmax(360px, 1.45fr);
+        gap: 16px;
+        align-items: start;
+      }
+
+      .adp-coverage {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin: 20px 0;
+        padding: 14px 16px;
+        background: #fffaf3;
+        border: 1px solid #eadfce;
+        border-radius: 18px;
+      }
+
+      .adp-coverage h2 {
+        margin: 0 10px 0 0;
+        color: #865817;
+        font-size: 1rem;
+      }
+
+      .adp-coverage-item {
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.88rem;
+        font-weight: 800;
+      }
+
+      .adp-panel {
+        background: #fffaf3;
+        border: 1px solid #eadfce;
+        border-radius: 18px;
+        box-shadow: 0 12px 32px rgb(73 49 22 / 8%);
+        padding: 18px;
+      }
+
+      .adp-panel h2 {
+        color: #865817;
+        font-size: 1rem;
+        letter-spacing: 0.02em;
+      }
+
+      .adp-card {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+        margin: 0 0 10px;
+        padding: 12px;
+        text-align: left;
+        color: #243044;
+        background: #ffffff;
+        border: 1px solid #e4d8c5;
+        border-radius: 14px;
+        cursor: pointer;
+      }
+
+      .adp-card:hover,
+      .adp-card:focus-visible {
+        border-color: #bd8330;
+        outline: none;
+      }
+
+      .adp-card.is-selected {
+        border-color: #a76715;
+        background: #fff1d8;
+      }
+
+      .adp-card-title {
+        font-weight: 700;
+      }
+
+      .adp-pill {
+        align-self: flex-start;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: #dff4e6;
+        color: #1d6d3b;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      .adp-pill.is-ready,
+      .adp-coverage-item.is-ready,
+      .adp-confidence-badge.is-ready {
+        background: #dff4e6;
+        color: #1d6d3b;
+      }
+
+      .adp-pill.is-plausible,
+      .adp-coverage-item.is-plausible,
+      .adp-confidence-badge.is-plausible {
+        background: #fff1cf;
+        color: #8a5a10;
+      }
+
+      .adp-pill.is-missing,
+      .adp-coverage-item.is-missing,
+      .adp-confidence-badge.is-missing {
+        background: #ffe0de;
+        color: #9b2d22;
+      }
+
+      .adp-pill.is-muted {
+        background: #ece4d8;
+        color: #6f6253;
+      }
+
+      .adp-detail {
+        min-height: 420px;
+      }
+
+      .adp-block {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #ecdfcc;
+      }
+
+      .adp-label {
+        margin-bottom: 4px;
+        color: #8a6230;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .adp-path {
+        display: grid;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .adp-path li {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 10px;
+        padding: 10px 12px;
+        background: #ffffff;
+        border: 1px solid #eadfce;
+        border-radius: 12px;
+      }
+
+      .adp-path strong {
+        color: #80520e;
+      }
+
+      .adp-orchestration {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .adp-orchestration > li {
+        padding: 14px;
+        background: #ffffff;
+        border: 1px solid #eadfce;
+        border-radius: 14px;
+      }
+
+      .adp-orchestration h4 {
+        margin: 0 0 6px;
+        color: #80520e;
+      }
+
+      .adp-step-mapping {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 6px 10px;
+        margin: 10px 0;
+      }
+
+      .adp-step-mapping dt {
+        color: #80520e;
+        font-weight: 800;
+      }
+
+      .adp-step-mapping dd {
+        margin: 0;
+      }
+
+      .adp-notes {
+        margin-bottom: 0;
+        color: #536071;
+      }
+
+      .adp-confidence-badge {
+        display: inline-block;
+        margin-bottom: 10px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 800;
+      }
+
+      .adp-warning {
+        margin-top: 16px;
+        padding: 12px;
+        border-radius: 12px;
+        color: #6e4d13;
+        background: #fff1cf;
+        border: 1px solid #e6c079;
+      }
+
+      .adp-example-reading {
+        padding: 12px;
+        border-radius: 12px;
+        background: #eef4ff;
+        color: #254c83;
+      }
+
+      @media (max-width: 960px) {
+        .adp-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="author-discovery-playground"></main>
+    <script
+      type="module"
+      src="../../dist/packages/authoring/src/AuthorDiscoveryPlayground.js"
+    ></script>
+  </body>
+</html>

@@ -59,6 +59,61 @@ Each path makes these authoring decisions visible:
 The initial paths cover reflection and diagnosis through selection, recall and
 reflection through typing, and application through a situated task.
 
+## Author Discovery Playground V0.2
+
+The package also contains a small local playground:
+
+```txt
+packages/authoring/author-discovery-playground.html
+```
+
+After running the project build, open the HTML file in a browser. It lets an
+author move through:
+
+```txt
+Intent
+↓
+Pedagogical Use
+↓
+RepresentationPath
+↓
+BHE Representation
+↓
+Real Example
+```
+
+This is not an editor. It does not save, create activities, choose renderers,
+or call evaluators. It is a visual discovery aid for the experimental authoring
+layer.
+
+V0.1 adds a small coverage view and a `Representation Confidence` badge for
+each displayed pedagogical use:
+
+- `READY`: documented path, identified BHE concepts, and a real corpus example.
+- `PLAUSIBLE`: the path seems representable, but some formalization or corpus
+  validation is still missing.
+- `MISSING BRIDGE`: the author need is visible, but no explicit bridge to BHE
+  is documented yet.
+
+V0.2 adds one isolated `AuthorOrchestrationPath` for `Explore Before The Rule`,
+using the Countable / Uncountable `I Learn` corpus signal. It is a composed
+authoring path:
+
+```txt
+Observe
+↓
+Compare
+↓
+Infer
+↓
+Stabilize
+↓
+Practice
+```
+
+This path is not a new core object. Some steps map to existing BHE vocabulary;
+others remain explicitly authoring-only.
+
 ## Initial Catalog
 
 The first entries cover:
@@ -80,7 +135,7 @@ strings are intentionally not tied to core unions or registries.
 - Type-only references to current core result and interaction vocabulary.
 - No runtime orchestration.
 - No renderer or evaluator lookup.
-- No UI.
+- A minimal static UI only for discovery.
 - No claim that this catalog is a stable taxonomy.
 - No claim that every suggestion is already implemented end to end.
 
