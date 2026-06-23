@@ -12,20 +12,31 @@ export type {
   AuthorCoverageStats,
   AuthorDiscoveryIntent,
   AuthorDiscoveryUseView,
+  AuthorIntentRoutingMapEntry,
+  AuthorIntentRoutingType,
   BHEPathConnectionStatus,
   CompareClarificationOption,
   CompareValidationExample,
+  ProduceClarificationOption,
+  ProduceValidationExample,
+  ReflectClarificationOption,
+  ReflectValidationExample,
   RepresentationConfidence,
   RepresentationConfidenceLevel
 } from "./AuthorDiscoveryPlayground.js";
 export {
   authorDiscoveryExamples,
   authorDiscoveryIntents,
+  authorIntentRoutingMap,
   compareClarificationOptions,
   compareValidationExamples,
   getAuthorCoverageStats,
   getAuthorDiscoveryUsesForIntent,
   getRepresentationConfidenceForUse,
+  produceClarificationOptions,
+  produceValidationExamples,
+  reflectClarificationOptions,
+  reflectValidationExamples,
   renderAuthorDiscoveryPlayground
 } from "./AuthorDiscoveryPlayground.js";
 export type {

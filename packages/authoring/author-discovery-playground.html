@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Author Discovery Playground V0.3</title>
+    <title>Author Discovery Playground V0.6</title>
     <style>
       :root {
         color: #162033;
@@ -69,6 +69,90 @@
         border-radius: 999px;
         font-size: 0.88rem;
         font-weight: 800;
+      }
+
+      .adp-routing-map {
+        margin: 20px 0;
+        padding: 18px;
+        background: #fffaf3;
+        border: 1px solid #eadfce;
+        border-radius: 18px;
+        box-shadow: 0 12px 32px rgb(73 49 22 / 8%);
+      }
+
+      .adp-routing-map h2 {
+        margin-bottom: 6px;
+        color: #865817;
+        font-size: 1rem;
+      }
+
+      .adp-routing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .adp-routing-card {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px;
+        text-align: left;
+        color: #243044;
+        background: #ffffff;
+        border: 1px solid #e4d8c5;
+        border-radius: 14px;
+        cursor: pointer;
+      }
+
+      .adp-routing-card:hover,
+      .adp-routing-card:focus-visible {
+        border-color: #bd8330;
+        outline: none;
+      }
+
+      .adp-routing-card.is-selected {
+        border-color: #a76715;
+        background: #fff1d8;
+      }
+
+      .adp-routing-title {
+        font-weight: 800;
+      }
+
+      .adp-routing-type {
+        align-self: flex-start;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 800;
+      }
+
+      .adp-routing-type.is-self-routing {
+        background: #dff4e6;
+        color: #1d6d3b;
+      }
+
+      .adp-routing-type.is-clarification-routing {
+        background: #e3e4ff;
+        color: #393c91;
+      }
+
+      .adp-routing-type.is-hybrid-routing {
+        background: #fff1cf;
+        color: #8a5a10;
+      }
+
+      .adp-routing-question {
+        color: #2f3a4e;
+        font-weight: 700;
+      }
+
+      .adp-routing-direction,
+      .adp-routing-confidence {
+        color: #536071;
+        font-size: 0.88rem;
       }
 
       .adp-panel {

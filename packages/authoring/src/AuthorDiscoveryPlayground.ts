@@ -23,6 +23,21 @@ export interface AuthorDiscoveryIntent {
   pedagogicalUseIds: readonly string[];
 }
 
+export type AuthorIntentRoutingType =
+  | "self-routing"
+  | "clarification-routing"
+  | "hybrid";
+
+export interface AuthorIntentRoutingMapEntry {
+  intentId: string;
+  shortLabel: string;
+  routingType: AuthorIntentRoutingType;
+  routingLabel: "Self-routing" | "Clarification-routing" | "Hybrid";
+  implicitQuestion: string;
+  bheDirection: string;
+  confidence: "direct" | "ambiguous" | "very broad";
+}
+
 export interface CompareClarificationOption {
   id: string;
   label: string;
@@ -30,6 +45,29 @@ export interface CompareClarificationOption {
   suggestedPedagogicalUseIds: readonly string[];
   suggestedRepresentationPathIds: readonly string[];
   bheMapping: string;
+  explanation: string;
+  limits: readonly string[];
+}
+
+export interface ReflectClarificationOption {
+  id: string;
+  label: string;
+  examples: readonly string[];
+  suggestedPedagogicalUseIds: readonly string[];
+  suggestedRepresentationPathIds: readonly string[];
+  bheMapping: string;
+  explanation: string;
+  limits: readonly string[];
+}
+
+export interface ProduceClarificationOption {
+  id: string;
+  label: string;
+  examples: readonly string[];
+  suggestedPedagogicalUseIds: readonly string[];
+  suggestedRepresentationPathIds: readonly string[];
+  bheMapping: string;
+  status: string;
   explanation: string;
   limits: readonly string[];
 }
@@ -42,6 +80,26 @@ export interface CompareValidationExample {
   clarificationOptionId: string;
   clarificationChoice: string;
   alternativeChoices: readonly string[];
+  suggestedPedagogicalUseIds: readonly string[];
+  suggestedRepresentationPathIds: readonly string[];
+  bheMapping: string;
+  argument: string;
+}
+
+export interface ReflectValidationExample {
+  id: string;
+  brick: string;
+  clarificationChoices: readonly string[];
+  suggestedPedagogicalUseIds: readonly string[];
+  suggestedRepresentationPathIds: readonly string[];
+  bheMapping: string;
+  argument: string;
+}
+
+export interface ProduceValidationExample {
+  id: string;
+  brick: string;
+  clarificationChoice: string;
   suggestedPedagogicalUseIds: readonly string[];
   suggestedRepresentationPathIds: readonly string[];
   bheMapping: string;
@@ -156,6 +214,72 @@ export const authorDiscoveryIntents = [
     ]
   }
 ] as const satisfies readonly AuthorDiscoveryIntent[];
+
+export const authorIntentRoutingMap = [
+  {
+    intentId: "notice",
+    shortLabel: "Notice",
+    routingType: "hybrid",
+    routingLabel: "Hybrid",
+    implicitQuestion: "What should noticing lead to?",
+    bheDirection: "Reflect / Diagnose / Explore / Infer",
+    confidence: "ambiguous"
+  },
+  {
+    intentId: "reflect",
+    shortLabel: "Reflect",
+    routingType: "clarification-routing",
+    routingLabel: "Clarification-routing",
+    implicitQuestion: "What are learners reflecting on?",
+    bheDirection: "Multiple reflective / inferential / situated routes",
+    confidence: "very broad"
+  },
+  {
+    intentId: "recall",
+    shortLabel: "Recall",
+    routingType: "self-routing",
+    routingLabel: "Self-routing",
+    implicitQuestion: "Do learners need to retrieve a target before seeing it?",
+    bheDirection: "Recall Through Typing -> MemorizationTypingRecall",
+    confidence: "direct"
+  },
+  {
+    intentId: "apply",
+    shortLabel: "Apply",
+    routingType: "hybrid",
+    routingLabel: "Hybrid",
+    implicitQuestion: "What situation should the learner act in?",
+    bheDirection: "Apply Through Situated Task + context-specific shape",
+    confidence: "ambiguous"
+  },
+  {
+    intentId: "classify",
+    shortLabel: "Classify",
+    routingType: "hybrid",
+    routingLabel: "Hybrid",
+    implicitQuestion: "Are the categories already stable?",
+    bheDirection: "ClassificationSet / Practice / Explore / Diagnose",
+    confidence: "ambiguous"
+  },
+  {
+    intentId: "produce",
+    shortLabel: "Produce",
+    routingType: "clarification-routing",
+    routingLabel: "Clarification-routing",
+    implicitQuestion: "What kind of production is expected?",
+    bheDirection: "Recall / Reflect / Apply / Transform / Infer",
+    confidence: "very broad"
+  },
+  {
+    intentId: "compare",
+    shortLabel: "Compare",
+    routingType: "clarification-routing",
+    routingLabel: "Clarification-routing",
+    implicitQuestion: "What are learners comparing?",
+    bheDirection: "Multiple BHE structures",
+    confidence: "very broad"
+  }
+] as const satisfies readonly AuthorIntentRoutingMapEntry[];
 
 export const compareClarificationOptions = [
   {
@@ -334,6 +458,386 @@ export const compareValidationExamples = [
       "Learners compare habits, confidence, and translation strategies rather than correct answers. Reflect Through Selection is the clearest first path; Reflect Through Typing can extend it."
   }
 ] as const satisfies readonly CompareValidationExample[];
+
+export const reflectClarificationOptions = [
+  {
+    id: "habits",
+    label: "Habits",
+    examples: ["translation habits", "speaking habits", "study habits"],
+    suggestedPedagogicalUseIds: [
+      "reflect-through-selection",
+      "diagnose-through-selection"
+    ],
+    suggestedRepresentationPathIds: ["reflect-through-selection"],
+    bheMapping: "Reflective or diagnostic selection -> BHEResult.completed",
+    explanation:
+      "Choose this when learners are noticing what they usually do before learning or acting.",
+    limits: [
+      "Reflect Through Selection fits self-observation.",
+      "Diagnose Through Selection fits starting-point evidence or support decisions."
+    ]
+  },
+  {
+    id: "strategies",
+    label: "Strategies",
+    examples: [
+      "vocabulary strategies",
+      "speaking strategies",
+      "learning methods"
+    ],
+    suggestedPedagogicalUseIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    suggestedRepresentationPathIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    bheMapping: "Reflective selection or typing -> BHEResult.completed",
+    explanation:
+      "Choose this when learners compare, name, or explain learning strategies they use or may try.",
+    limits: [
+      "Selection works when strategies are offered as options.",
+      "Typing works when learners must explain why a strategy fits them."
+    ]
+  },
+  {
+    id: "confidence-feelings",
+    label: "Confidence / Feelings",
+    examples: ["speaking anxiety", "confidence", "comfort level"],
+    suggestedPedagogicalUseIds: ["reflect-through-selection"],
+    suggestedRepresentationPathIds: ["reflect-through-selection"],
+    bheMapping: "Reflective selection -> BHEResult.completed",
+    explanation:
+      "Choose this when reflection surfaces affect, comfort, anxiety, or readiness without judging correctness.",
+    limits: [
+      "The result is completion, not assessment.",
+      "Feedback should acknowledge participation rather than validate a right answer."
+    ]
+  },
+  {
+    id: "understanding",
+    label: "Understanding",
+    examples: [
+      "what do I understand now?",
+      "what distinction is becoming clear?"
+    ],
+    suggestedPedagogicalUseIds: ["explore-before-rule"],
+    suggestedRepresentationPathIds: ["explore-before-rule"],
+    bheMapping: "Explore Before The Rule, InferenceSet, or ClassificationSet",
+    explanation:
+      "Choose this when learners are reflecting on a concept or distinction becoming clear.",
+    limits: [
+      "Reflect may not be the best route here.",
+      "Understanding often routes toward exploration, inference, or classification."
+    ]
+  },
+  {
+    id: "choices",
+    label: "Choices",
+    examples: ["why did I choose this?"],
+    suggestedPedagogicalUseIds: ["reflect-through-typing"],
+    suggestedRepresentationPathIds: ["reflect-through-typing"],
+    bheMapping: "Reflective typing or InferenceSet",
+    explanation:
+      "Choose this when the learner should explain a choice, preference, interpretation, or route taken.",
+    limits: [
+      "Reflect Through Typing fits personal explanation.",
+      "InferenceSet may fit better when the choice is evidence-based."
+    ]
+  },
+  {
+    id: "hypotheses",
+    label: "Hypotheses",
+    examples: ["what rule do I think explains this?"],
+    suggestedPedagogicalUseIds: ["explore-before-rule"],
+    suggestedRepresentationPathIds: ["explore-before-rule"],
+    bheMapping: "InferenceSet or Explore Before The Rule",
+    explanation:
+      "Choose this when reflection is really about forming, revising, or justifying a possible explanation.",
+    limits: [
+      "Reflection can slide toward inference here.",
+      "The author may need an exploration path rather than a pure Reflect path."
+    ]
+  },
+  {
+    id: "experience",
+    label: "Experience",
+    examples: ["what happened when I tried this?"],
+    suggestedPedagogicalUseIds: [
+      "reflect-through-typing",
+      "apply-through-situated-task"
+    ],
+    suggestedRepresentationPathIds: [
+      "reflect-through-typing",
+      "apply-through-situated-task"
+    ],
+    bheMapping: "Reflective typing or situated task result details",
+    explanation:
+      "Choose this when learners review what happened after trying a strategy, speaking, or acting in context.",
+    limits: [
+      "Typing can capture the reflection.",
+      "Apply Through Situated Task may be the better route when the experience has a functional success condition."
+    ]
+  },
+  {
+    id: "progress",
+    label: "Progress",
+    examples: ["what changed for me?"],
+    suggestedPedagogicalUseIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    suggestedRepresentationPathIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    bheMapping: "Reflective selection or typing -> BHEResult.completed",
+    explanation:
+      "Choose this when learners compare a current state with a previous state or name what has changed.",
+    limits: [
+      "BHE can record the reflection now.",
+      "Longitudinal progress tracking is not modeled by this playground."
+    ]
+  },
+  {
+    id: "action-reliability",
+    label: "Action Reliability",
+    examples: ["did my language work for another learner?"],
+    suggestedPedagogicalUseIds: ["apply-through-situated-task"],
+    suggestedRepresentationPathIds: ["apply-through-situated-task"],
+    bheMapping: "Apply Through Situated Task with reflective review",
+    explanation:
+      "Choose this when reflection depends on whether language or action worked for someone else.",
+    limits: [
+      "This is not a pure Reflect route.",
+      "The central BHE question may be functional success in a situated task."
+    ]
+  }
+] as const satisfies readonly ReflectClarificationOption[];
+
+export const reflectValidationExamples = [
+  {
+    id: "thinking-in-english-reflect-validation",
+    brick: "Thinking in English",
+    clarificationChoices: ["Habits", "Strategies", "Confidence / Feelings"],
+    suggestedPedagogicalUseIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    suggestedRepresentationPathIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    bheMapping:
+      "Reflective selection or typing -> non-evaluative completion -> BHEResult.completed",
+    argument:
+      "The learner reflects on translation habits, speaking strategies, and confidence before oral activation. The clarification prevents Reflect from being treated as one generic selection path."
+  },
+  {
+    id: "memorising-vocabulary-reflect-validation",
+    brick: "Memorising Vocabulary",
+    clarificationChoices: ["Strategies"],
+    suggestedPedagogicalUseIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    suggestedRepresentationPathIds: [
+      "reflect-through-selection",
+      "reflect-through-typing"
+    ],
+    bheMapping:
+      "Reflective strategy awareness using selection or typing, usually completed rather than scored",
+    argument:
+      "The learner reflects on vocabulary-learning methods, tries a strategy, and decides what may fit them. Strategies is the clearest route."
+  },
+  {
+    id: "wayfinding-reflect-validation",
+    brick: "Wayfinding",
+    clarificationChoices: ["Action Reliability", "Experience"],
+    suggestedPedagogicalUseIds: [
+      "apply-through-situated-task",
+      "reflect-through-typing"
+    ],
+    suggestedRepresentationPathIds: [
+      "apply-through-situated-task",
+      "reflect-through-typing"
+    ],
+    bheMapping:
+      "Apply Through Situated Task with reflective review of whether directions worked",
+    argument:
+      "The strongest reflective question is not self-positioning, but whether the learner's language worked for another learner in a map-based task."
+  }
+] as const satisfies readonly ReflectValidationExample[];
+
+export const produceClarificationOptions = [
+  {
+    id: "recalled-target",
+    label: "Recalled Target",
+    examples: [
+      "remember a word",
+      "remember an expression",
+      "remember a definition"
+    ],
+    suggestedPedagogicalUseIds: ["recall-through-typing"],
+    suggestedRepresentationPathIds: ["recall-through-typing"],
+    bheMapping: "Recall Through Typing -> MemorizationTypingRecall",
+    status: "Strong / real path",
+    explanation:
+      "Choose this when production means retrieving a known target from a cue before seeing the answer.",
+    limits: [
+      "This is active recall, not open production.",
+      "Evaluation is deterministic when expected targets and accepted variants are known."
+    ]
+  },
+  {
+    id: "context-fitting-answer",
+    label: "Context-Fitting Answer",
+    examples: [
+      "fill a blank",
+      "complete a sentence",
+      "complete a dialogue"
+    ],
+    suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
+    suggestedRepresentationPathIds: [],
+    bheMapping: "GapFillSet -> ContextualTyping",
+    status: "Real engine path; authoring bridge still incomplete",
+    explanation:
+      "Choose this when learners produce the missing piece that fits an existing local context.",
+    limits: [
+      "GapFill has a real engine path.",
+      "No dedicated authoring RepresentationPath is documented yet."
+    ]
+  },
+  {
+    id: "transformed-form",
+    label: "Transformed Form",
+    examples: [
+      "active -> passive",
+      "singular -> plural",
+      "formal -> informal"
+    ],
+    suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
+    suggestedRepresentationPathIds: [],
+    bheMapping: "TransformationSet -> TransformationTyping",
+    status: "Strong / real path",
+    explanation:
+      "Choose this when learners start from a visible source and produce a changed target form.",
+    limits: [
+      "TransformationSet preserves the source -> operation -> target relation.",
+      "The core path is strong; the authoring bridge is still less visible than Recall."
+    ]
+  },
+  {
+    id: "hypothesis-interpretation",
+    label: "Hypothesis / Interpretation",
+    examples: [
+      "what do you think this means?",
+      "what rule explains this?"
+    ],
+    suggestedPedagogicalUseIds: ["explore-before-rule"],
+    suggestedRepresentationPathIds: ["explore-before-rule"],
+    bheMapping: "InferenceSet or Explore Before The Rule",
+    status: "Conceptually covered; partially implemented",
+    explanation:
+      "Choose this when learners produce a possible meaning, rule, or explanation from clues.",
+    limits: [
+      "Inference can carry hypothesis work.",
+      "Open interpretation remains harder to evaluate qualitatively."
+    ]
+  },
+  {
+    id: "reflection-explanation",
+    label: "Reflection / Explanation",
+    examples: [
+      "explain your strategy",
+      "justify your choice",
+      "describe your experience"
+    ],
+    suggestedPedagogicalUseIds: ["reflect-through-typing"],
+    suggestedRepresentationPathIds: ["reflect-through-typing"],
+    bheMapping: "Reflect Through Typing -> BHEResult.completed",
+    status: "Viable non-evaluative path",
+    explanation:
+      "Choose this when the production is meaningful because it expresses reflection, strategy, or experience.",
+    limits: [
+      "The result is usually completed, not success or failed.",
+      "ContextualTypingUserInput is a structural carrier, not a perfect semantic name."
+    ]
+  },
+  {
+    id: "situated-response",
+    label: "Situated Response",
+    examples: [
+      "give directions",
+      "answer a customer",
+      "write an email",
+      "solve a task in context"
+    ],
+    suggestedPedagogicalUseIds: ["apply-through-situated-task"],
+    suggestedRepresentationPathIds: ["apply-through-situated-task"],
+    bheMapping: "Apply Through Situated Task",
+    status: "Plausible context-dependent path",
+    explanation:
+      "Choose this when learners produce language or action that should work in a credible situation.",
+    limits: [
+      "The interaction shape depends on the task.",
+      "The author must define what observable success means in context."
+    ]
+  },
+  {
+    id: "communicative-clue",
+    label: "Communicative Clue",
+    examples: [
+      "describe an object",
+      "leave clues",
+      "help another learner infer"
+    ],
+    suggestedPedagogicalUseIds: ["apply-through-situated-task"],
+    suggestedRepresentationPathIds: ["apply-through-situated-task"],
+    bheMapping: "Apply Through Situated Task with social or interpretive validation",
+    status: "Conceptually visible; validation still open",
+    explanation:
+      "Choose this when production is successful if another learner can interpret or act from it.",
+    limits: [
+      "This may require social validation or peer interpretation.",
+      "The current playground can route the author, but does not model the full social loop."
+    ]
+  }
+] as const satisfies readonly ProduceClarificationOption[];
+
+export const produceValidationExamples = [
+  {
+    id: "passive-voice-produce-validation",
+    brick: "Passive Voice",
+    clarificationChoice: "Transformed Form",
+    suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
+    suggestedRepresentationPathIds: [],
+    bheMapping: "TransformationSet -> TransformationTyping",
+    argument:
+      "The dominant productive task is transforming active forms into passive forms. Produce becomes clear only after the author specifies source-to-target production."
+  },
+  {
+    id: "memorising-vocabulary-produce-validation",
+    brick: "Memorising Vocabulary",
+    clarificationChoice: "Recalled Target",
+    suggestedPedagogicalUseIds: ["recall-through-typing"],
+    suggestedRepresentationPathIds: ["recall-through-typing"],
+    bheMapping: "Recall Through Typing -> MemorizationTypingRecall",
+    argument:
+      "The learner is not producing freely; they retrieve a target word or expression from a cue. This routes naturally to the existing active recall path."
+  },
+  {
+    id: "thinking-in-english-produce-validation",
+    brick: "Thinking in English",
+    clarificationChoice: "Reflection / Explanation",
+    suggestedPedagogicalUseIds: ["reflect-through-typing"],
+    suggestedRepresentationPathIds: ["reflect-through-typing"],
+    bheMapping: "Reflect Through Typing -> BHEResult.completed",
+    argument:
+      "When Thinking in English asks learners to put a strategy or experience into words, production is reflective and non-corrective. Completion is more appropriate than scoring."
+  }
+] as const satisfies readonly ProduceValidationExample[];
 
 export const authorDiscoveryExamples = [
   {
@@ -536,12 +1040,16 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
   let selectedUseId =
     getAuthorDiscoveryUsesForIntent(selectedIntentId)[0]?.use.id ?? "";
   let selectedCompareOptionId: string = compareClarificationOptions[0]?.id ?? "";
+  let selectedReflectOptionId: string = reflectClarificationOptions[0]?.id ?? "";
+  let selectedProduceOptionId: string = produceClarificationOptions[0]?.id ?? "";
 
   const render = (): void => {
     const selectedIntent = authorDiscoveryIntents.find(
       (intent) => intent.id === selectedIntentId
     );
     const isCompareIntent = selectedIntentId === "compare";
+    const isReflectIntent = selectedIntentId === "reflect";
+    const isProduceIntent = selectedIntentId === "produce";
     const useViews = getAuthorDiscoveryUsesForIntent(selectedIntentId);
     const selectedUseView =
       useViews.find((view) => view.use.id === selectedUseId) ?? useViews[0];
@@ -549,12 +1057,20 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
       compareClarificationOptions.find(
         (option) => option.id === selectedCompareOptionId
       ) ?? compareClarificationOptions[0];
+    const selectedReflectOption =
+      reflectClarificationOptions.find(
+        (option) => option.id === selectedReflectOptionId
+      ) ?? reflectClarificationOptions[0];
+    const selectedProduceOption =
+      produceClarificationOptions.find(
+        (option) => option.id === selectedProduceOptionId
+      ) ?? produceClarificationOptions[0];
 
     root.replaceChildren();
     root.className = "author-discovery-playground";
 
     const title = document.createElement("h1");
-    title.textContent = "Author Discovery Playground V0.3";
+    title.textContent = "Author Discovery Playground V0.6";
 
     const subtitle = document.createElement("p");
     subtitle.className = "adp-subtitle";
@@ -562,6 +1078,7 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
       "Start from what learners should do, then discover how BHE can represent it.";
 
     const coverage = renderCoverage(getAuthorCoverageStats());
+    const routingMap = renderAuthorIntentRoutingMap(selectedIntentId);
 
     const layout = document.createElement("div");
     layout.className = "adp-layout";
@@ -572,16 +1089,40 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
           compareClarificationOptions,
           selectedCompareOption?.id
         )
-      : renderUsePanel(useViews, selectedUseView?.use.id);
+      : isReflectIntent
+        ? renderReflectClarificationPanel(
+            reflectClarificationOptions,
+            selectedReflectOption?.id
+          )
+        : isProduceIntent
+          ? renderProduceClarificationPanel(
+              produceClarificationOptions,
+              selectedProduceOption?.id
+            )
+        : renderUsePanel(useViews, selectedUseView?.use.id);
     const detailPanel =
       isCompareIntent && selectedCompareOption
         ? renderCompareDetailPanel(selectedIntent, selectedCompareOption)
+        : isReflectIntent && selectedReflectOption
+          ? renderReflectDetailPanel(selectedIntent, selectedReflectOption)
+          : isProduceIntent && selectedProduceOption
+            ? renderProduceDetailPanel(selectedIntent, selectedProduceOption)
         : renderDetailPanel(selectedIntent, selectedUseView);
 
     layout.append(intentPanel, usePanel, detailPanel);
-    root.append(title, subtitle, coverage, layout);
+    root.append(title, subtitle, coverage, routingMap, layout);
 
-    intentPanel.addEventListener("click", (event) => {
+    const selectIntentFromButton = (button: HTMLButtonElement): void => {
+      selectedIntentId = button.dataset.intentId ?? selectedIntentId;
+      selectedUseId =
+        getAuthorDiscoveryUsesForIntent(selectedIntentId)[0]?.use.id ?? "";
+      selectedCompareOptionId = compareClarificationOptions[0]?.id ?? "";
+      selectedReflectOptionId = reflectClarificationOptions[0]?.id ?? "";
+      selectedProduceOptionId = produceClarificationOptions[0]?.id ?? "";
+      render();
+    };
+
+    const handleIntentClick = (event: MouseEvent): void => {
       const button = (event.target as Element).closest<HTMLButtonElement>(
         "button[data-intent-id]"
       );
@@ -590,12 +1131,11 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
         return;
       }
 
-      selectedIntentId = button.dataset.intentId ?? selectedIntentId;
-      selectedUseId =
-        getAuthorDiscoveryUsesForIntent(selectedIntentId)[0]?.use.id ?? "";
-      selectedCompareOptionId = compareClarificationOptions[0]?.id ?? "";
-      render();
-    });
+      selectIntentFromButton(button);
+    };
+
+    intentPanel.addEventListener("click", handleIntentClick);
+    routingMap.addEventListener("click", handleIntentClick);
 
     usePanel.addEventListener("click", (event) => {
       const compareButton = (event.target as Element).closest<HTMLButtonElement>(
@@ -605,6 +1145,28 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
       if (compareButton) {
         selectedCompareOptionId =
           compareButton.dataset.compareOptionId ?? selectedCompareOptionId;
+        render();
+        return;
+      }
+
+      const reflectButton = (event.target as Element).closest<HTMLButtonElement>(
+        "button[data-reflect-option-id]"
+      );
+
+      if (reflectButton) {
+        selectedReflectOptionId =
+          reflectButton.dataset.reflectOptionId ?? selectedReflectOptionId;
+        render();
+        return;
+      }
+
+      const produceButton = (event.target as Element).closest<HTMLButtonElement>(
+        "button[data-produce-option-id]"
+      );
+
+      if (produceButton) {
+        selectedProduceOptionId =
+          produceButton.dataset.produceOptionId ?? selectedProduceOptionId;
         render();
         return;
       }
@@ -623,6 +1185,70 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
   };
 
   render();
+}
+
+function renderAuthorIntentRoutingMap(selectedIntentId: string): HTMLElement {
+  const section = document.createElement("section");
+  section.className = "adp-routing-map";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Author Intent Routing Map";
+
+  const intro = document.createElement("p");
+  intro.className = "adp-panel-note";
+  intro.textContent =
+    "Intentions do not all behave the same way: some are direct, some need clarification, and some are hybrid.";
+
+  const cards = document.createElement("div");
+  cards.className = "adp-routing-grid";
+
+  for (const entry of authorIntentRoutingMap) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.intentId = entry.intentId;
+    button.className =
+      entry.intentId === selectedIntentId
+        ? "adp-routing-card is-selected"
+        : "adp-routing-card";
+
+    const title = document.createElement("span");
+    title.className = "adp-routing-title";
+    title.textContent = entry.shortLabel;
+
+    const type = document.createElement("span");
+    type.className = `adp-routing-type ${getRoutingTypeClass(entry.routingType)}`;
+    type.textContent = entry.routingLabel;
+
+    const question = document.createElement("span");
+    question.className = "adp-routing-question";
+    question.textContent = entry.implicitQuestion;
+
+    const direction = document.createElement("span");
+    direction.className = "adp-routing-direction";
+    direction.textContent = entry.bheDirection;
+
+    const confidence = document.createElement("span");
+    confidence.className = "adp-routing-confidence";
+    confidence.textContent = `Confidence: ${entry.confidence}`;
+
+    button.append(title, type, question, direction, confidence);
+    cards.append(button);
+  }
+
+  section.append(heading, intro, cards);
+  return section;
+}
+
+function getRoutingTypeClass(type: AuthorIntentRoutingType): string {
+  if (type === "self-routing") {
+    return "is-self-routing";
+  }
+
+  if (type === "clarification-routing") {
+    return "is-clarification-routing";
+  }
+
+  return "is-hybrid-routing";
 }
 
 function renderIntentPanel(selectedIntentId: string): HTMLElement {
@@ -747,6 +1373,94 @@ function renderCompareClarificationPanel(
   return panel;
 }
 
+function renderReflectClarificationPanel(
+  options: readonly ReflectClarificationOption[],
+  selectedOptionId?: string
+): HTMLElement {
+  const panel = document.createElement("section");
+  panel.className = "adp-panel";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "2. What are learners reflecting on?";
+
+  const intro = document.createElement("p");
+  intro.className = "adp-panel-note";
+  intro.textContent =
+    "Reflect is not a path yet. Choose the object of reflection first.";
+
+  panel.append(heading, intro);
+
+  for (const option of options) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.reflectOptionId = option.id;
+    button.className =
+      option.id === selectedOptionId ? "adp-card is-selected" : "adp-card";
+
+    const label = document.createElement("span");
+    label.className = "adp-card-title";
+    label.textContent = option.label;
+
+    const examples = document.createElement("span");
+    examples.textContent = option.examples.join(" · ");
+
+    const mapping = document.createElement("span");
+    mapping.className = "adp-pill is-muted";
+    mapping.textContent = option.bheMapping;
+
+    button.append(label, examples, mapping);
+    panel.append(button);
+  }
+
+  return panel;
+}
+
+function renderProduceClarificationPanel(
+  options: readonly ProduceClarificationOption[],
+  selectedOptionId?: string
+): HTMLElement {
+  const panel = document.createElement("section");
+  panel.className = "adp-panel";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "2. What kind of production is expected?";
+
+  const intro = document.createElement("p");
+  intro.className = "adp-panel-note";
+  intro.textContent =
+    "Produce is not a path yet. Choose what the learner is producing before routing toward BHE.";
+
+  panel.append(heading, intro);
+
+  for (const option of options) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.produceOptionId = option.id;
+    button.className =
+      option.id === selectedOptionId ? "adp-card is-selected" : "adp-card";
+
+    const label = document.createElement("span");
+    label.className = "adp-card-title";
+    label.textContent = option.label;
+
+    const examples = document.createElement("span");
+    examples.textContent = option.examples.join(" · ");
+
+    const mapping = document.createElement("span");
+    mapping.className = "adp-pill is-muted";
+    mapping.textContent = option.bheMapping;
+
+    const status = document.createElement("span");
+    status.className = "adp-panel-note";
+    status.textContent = option.status;
+
+    button.append(label, examples, mapping, status);
+    panel.append(button);
+  }
+
+  return panel;
+}
+
 function renderDetailPanel(
   selectedIntent: AuthorDiscoveryIntent | undefined,
   selectedUseView: AuthorDiscoveryUseView | undefined
@@ -788,6 +1502,82 @@ function renderDetailPanel(
   }
 
   panel.append(renderExamples(selectedUseView.examples));
+
+  return panel;
+}
+
+function renderReflectDetailPanel(
+  selectedIntent: AuthorDiscoveryIntent | undefined,
+  selectedOption: ReflectClarificationOption
+): HTMLElement {
+  const panel = document.createElement("section");
+  panel.className = "adp-panel adp-detail";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "3. Clarification path";
+  panel.append(heading);
+
+  if (!selectedIntent) {
+    const empty = document.createElement("p");
+    empty.textContent = "Choose an intent to begin.";
+    panel.append(empty);
+    return panel;
+  }
+
+  panel.append(
+    renderBlock(
+      "Intent",
+      "Reflect",
+      "Reflect is an incomplete author intention. The playground asks what learners are reflecting on before suggesting a BHE path."
+    ),
+    renderReflectExamples(selectedOption),
+    renderBlock(
+      "Clarification",
+      selectedOption.label,
+      selectedOption.explanation
+    ),
+    renderReflectSuggestedUses(selectedOption),
+    renderReflectMapping(selectedOption),
+    renderReflectValidationExamples()
+  );
+
+  return panel;
+}
+
+function renderProduceDetailPanel(
+  selectedIntent: AuthorDiscoveryIntent | undefined,
+  selectedOption: ProduceClarificationOption
+): HTMLElement {
+  const panel = document.createElement("section");
+  panel.className = "adp-panel adp-detail";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "3. Clarification path";
+  panel.append(heading);
+
+  if (!selectedIntent) {
+    const empty = document.createElement("p");
+    empty.textContent = "Choose an intent to begin.";
+    panel.append(empty);
+    return panel;
+  }
+
+  panel.append(
+    renderBlock(
+      "Intent",
+      "Produce",
+      "Produce is an incomplete author intention. The playground asks what kind of production is expected before suggesting a BHE path."
+    ),
+    renderProduceExamples(selectedOption),
+    renderBlock(
+      "Clarification",
+      selectedOption.label,
+      selectedOption.explanation
+    ),
+    renderProduceSuggestedUses(selectedOption),
+    renderProduceMapping(selectedOption),
+    renderProduceValidationExamples()
+  );
 
   return panel;
 }
@@ -853,8 +1643,138 @@ function renderCompareExamples(
   return block;
 }
 
+function renderReflectExamples(
+  option: ReflectClarificationOption
+): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Examples";
+
+  const list = document.createElement("ul");
+  list.className = "adp-notes";
+
+  for (const example of option.examples) {
+    const item = document.createElement("li");
+    item.textContent = example;
+    list.append(item);
+  }
+
+  block.append(label, list);
+  return block;
+}
+
+function renderProduceExamples(
+  option: ProduceClarificationOption
+): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Examples";
+
+  const list = document.createElement("ul");
+  list.className = "adp-notes";
+
+  for (const example of option.examples) {
+    const item = document.createElement("li");
+    item.textContent = example;
+    list.append(item);
+  }
+
+  block.append(label, list);
+  return block;
+}
+
 function renderCompareSuggestedUses(
   option: CompareClarificationOption
+): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Suggested Pedagogical Use";
+
+  const list = document.createElement("div");
+  list.className = "adp-suggested-list";
+
+  for (const useId of option.suggestedPedagogicalUseIds) {
+    const use = useById.get(useId);
+
+    if (!use) {
+      continue;
+    }
+
+    const item = document.createElement("div");
+    item.className = "adp-suggested-card";
+
+    const heading = document.createElement("h3");
+    heading.textContent = use.label;
+
+    const description = document.createElement("p");
+    description.textContent = use.description;
+
+    const confidence = getRepresentationConfidenceForUse(use.id);
+    const badge = document.createElement("span");
+    badge.className = `adp-pill ${getConfidenceClass(confidence)}`;
+    badge.textContent = confidence.badge;
+
+    item.append(heading, description, badge);
+    list.append(item);
+  }
+
+  block.append(label, list);
+  return block;
+}
+
+function renderReflectSuggestedUses(
+  option: ReflectClarificationOption
+): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Suggested Pedagogical Use";
+
+  const list = document.createElement("div");
+  list.className = "adp-suggested-list";
+
+  for (const useId of option.suggestedPedagogicalUseIds) {
+    const use = useById.get(useId);
+
+    if (!use) {
+      continue;
+    }
+
+    const item = document.createElement("div");
+    item.className = "adp-suggested-card";
+
+    const heading = document.createElement("h3");
+    heading.textContent = use.label;
+
+    const description = document.createElement("p");
+    description.textContent = use.description;
+
+    const confidence = getRepresentationConfidenceForUse(use.id);
+    const badge = document.createElement("span");
+    badge.className = `adp-pill ${getConfidenceClass(confidence)}`;
+    badge.textContent = confidence.badge;
+
+    item.append(heading, description, badge);
+    list.append(item);
+  }
+
+  block.append(label, list);
+  return block;
+}
+
+function renderProduceSuggestedUses(
+  option: ProduceClarificationOption
 ): HTMLElement {
   const block = document.createElement("div");
   block.className = "adp-block";
@@ -928,6 +1848,149 @@ function renderCompareMapping(option: CompareClarificationOption): HTMLElement {
   const values: readonly (readonly [string, string])[] = [
     ["Author Intent", "Compare"],
     ["Clarification Question", "What are learners comparing?"],
+    ["Chosen Category", option.label],
+    [
+      "Suggested Pedagogical Use",
+      suggestedUseLabels.join(" / ") || "No existing Pedagogical Use identified"
+    ],
+    [
+      "Suggested RepresentationPath",
+      pathLabels.join(" / ") || "No documented RepresentationPath yet"
+    ],
+    ["BHE Mapping", option.bheMapping]
+  ];
+
+  for (const [stepLabel, value] of values) {
+    const item = document.createElement("li");
+    const strong = document.createElement("strong");
+    strong.textContent = stepLabel;
+    const span = document.createElement("span");
+    span.textContent = value;
+    item.append(strong, span);
+    steps.append(item);
+  }
+
+  const limitsTitle = document.createElement("h3");
+  limitsTitle.textContent = "Visible limits";
+
+  const limits = document.createElement("ul");
+  limits.className = "adp-notes";
+
+  for (const limit of option.limits) {
+    const item = document.createElement("li");
+    item.textContent = limit;
+    limits.append(item);
+  }
+
+  block.append(label, steps, limitsTitle, limits);
+  return block;
+}
+
+function renderProduceMapping(option: ProduceClarificationOption): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Suggested RepresentationPath and BHE mapping";
+
+  const steps = document.createElement("ol");
+  steps.className = "adp-path";
+
+  const suggestedUseLabels = option.suggestedPedagogicalUseIds
+    .map((useId) => useById.get(useId)?.label)
+    .filter((useLabel): useLabel is string => Boolean(useLabel));
+
+  const pathLabels = option.suggestedRepresentationPathIds.map((pathId) => {
+    const path = pathByUseId.get(pathId);
+    const orchestrationPath = orchestrationPathByUseId.get(pathId);
+
+    if (path) {
+      return `RepresentationPath: ${pathId}`;
+    }
+
+    if (orchestrationPath) {
+      return `AuthorOrchestrationPath: ${orchestrationPath.title}`;
+    }
+
+    return pathId;
+  });
+
+  const values: readonly (readonly [string, string])[] = [
+    ["Author Intent", "Produce"],
+    ["Clarification Question", "What kind of production is expected?"],
+    ["Chosen Category", option.label],
+    [
+      "Suggested Pedagogical Use",
+      suggestedUseLabels.join(" / ") || "No existing Pedagogical Use identified"
+    ],
+    [
+      "Suggested RepresentationPath",
+      pathLabels.join(" / ") || "No documented RepresentationPath yet"
+    ],
+    ["BHE Mapping", option.bheMapping],
+    ["Path Status", option.status]
+  ];
+
+  for (const [stepLabel, value] of values) {
+    const item = document.createElement("li");
+    const strong = document.createElement("strong");
+    strong.textContent = stepLabel;
+    const span = document.createElement("span");
+    span.textContent = value;
+    item.append(strong, span);
+    steps.append(item);
+  }
+
+  const limitsTitle = document.createElement("h3");
+  limitsTitle.textContent = "Visible limits";
+
+  const limits = document.createElement("ul");
+  limits.className = "adp-notes";
+
+  for (const limit of option.limits) {
+    const item = document.createElement("li");
+    item.textContent = limit;
+    limits.append(item);
+  }
+
+  block.append(label, steps, limitsTitle, limits);
+  return block;
+}
+
+function renderReflectMapping(option: ReflectClarificationOption): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Suggested RepresentationPath and BHE mapping";
+
+  const steps = document.createElement("ol");
+  steps.className = "adp-path";
+
+  const suggestedUseLabels = option.suggestedPedagogicalUseIds
+    .map((useId) => useById.get(useId)?.label)
+    .filter((useLabel): useLabel is string => Boolean(useLabel));
+
+  const pathLabels = option.suggestedRepresentationPathIds.map((pathId) => {
+    const path = pathByUseId.get(pathId);
+    const orchestrationPath = orchestrationPathByUseId.get(pathId);
+
+    if (path) {
+      return `RepresentationPath: ${pathId}`;
+    }
+
+    if (orchestrationPath) {
+      return `AuthorOrchestrationPath: ${orchestrationPath.title}`;
+    }
+
+    return pathId;
+  });
+
+  const values: readonly (readonly [string, string])[] = [
+    ["Author Intent", "Reflect"],
+    ["Clarification Question", "What are learners reflecting on?"],
     ["Chosen Category", option.label],
     [
       "Suggested Pedagogical Use",
@@ -1048,6 +2111,160 @@ function renderCompareValidationExamples(): HTMLElement {
     argument.textContent = example.argument;
 
     item.append(title, status, rows, argument, renderInteractiveExample(example));
+    list.append(item);
+  }
+
+  block.append(label, intro, list);
+  return block;
+}
+
+function renderReflectValidationExamples(): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Real Validation Examples";
+
+  const intro = document.createElement("p");
+  intro.textContent =
+    "Three Boost'English bricks used to test whether Reflect clarification actually routes the author.";
+
+  const list = document.createElement("div");
+  list.className = "adp-validation-list";
+
+  for (const example of reflectValidationExamples) {
+    const item = document.createElement("div");
+    item.className = "adp-validation-card";
+
+    const title = document.createElement("h3");
+    title.textContent = example.brick;
+
+    const rows = document.createElement("dl");
+    rows.className = "adp-step-mapping";
+
+    const suggestedUseLabels = example.suggestedPedagogicalUseIds
+      .map((useId) => useById.get(useId)?.label)
+      .filter((useLabel): useLabel is string => Boolean(useLabel));
+
+    const pathLabels = example.suggestedRepresentationPathIds.map((pathId) => {
+      const path = pathByUseId.get(pathId);
+      const orchestrationPath = orchestrationPathByUseId.get(pathId);
+
+      if (path) {
+        return `RepresentationPath: ${pathId}`;
+      }
+
+      if (orchestrationPath) {
+        return `AuthorOrchestrationPath: ${orchestrationPath.title}`;
+      }
+
+      return pathId;
+    });
+
+    const values: readonly (readonly [string, string])[] = [
+      ["Clarification choice", example.clarificationChoices.join(" / ")],
+      [
+        "Suggested Pedagogical Use",
+        suggestedUseLabels.join(" / ") || "No existing Pedagogical Use identified"
+      ],
+      [
+        "Suggested RepresentationPath",
+        pathLabels.join(" / ") || "No documented RepresentationPath yet"
+      ],
+      ["BHE mapping", example.bheMapping]
+    ];
+
+    for (const [term, detail] of values) {
+      const dt = document.createElement("dt");
+      dt.textContent = term;
+      const dd = document.createElement("dd");
+      dd.textContent = detail;
+      rows.append(dt, dd);
+    }
+
+    const argument = document.createElement("p");
+    argument.className = "adp-example-reading";
+    argument.textContent = example.argument;
+
+    item.append(title, rows, argument);
+    list.append(item);
+  }
+
+  block.append(label, intro, list);
+  return block;
+}
+
+function renderProduceValidationExamples(): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-block";
+
+  const label = document.createElement("p");
+  label.className = "adp-label";
+  label.textContent = "Real Validation Examples";
+
+  const intro = document.createElement("p");
+  intro.textContent =
+    "Three Boost'English bricks used to test whether Produce clarification actually routes the author.";
+
+  const list = document.createElement("div");
+  list.className = "adp-validation-list";
+
+  for (const example of produceValidationExamples) {
+    const item = document.createElement("div");
+    item.className = "adp-validation-card";
+
+    const title = document.createElement("h3");
+    title.textContent = example.brick;
+
+    const rows = document.createElement("dl");
+    rows.className = "adp-step-mapping";
+
+    const suggestedUseLabels = example.suggestedPedagogicalUseIds
+      .map((useId) => useById.get(useId)?.label)
+      .filter((useLabel): useLabel is string => Boolean(useLabel));
+
+    const pathLabels = example.suggestedRepresentationPathIds.map((pathId) => {
+      const path = pathByUseId.get(pathId);
+      const orchestrationPath = orchestrationPathByUseId.get(pathId);
+
+      if (path) {
+        return `RepresentationPath: ${pathId}`;
+      }
+
+      if (orchestrationPath) {
+        return `AuthorOrchestrationPath: ${orchestrationPath.title}`;
+      }
+
+      return pathId;
+    });
+
+    const values: readonly (readonly [string, string])[] = [
+      ["Clarification choice", example.clarificationChoice],
+      [
+        "Suggested Pedagogical Use",
+        suggestedUseLabels.join(" / ") || "No existing Pedagogical Use identified"
+      ],
+      [
+        "Suggested RepresentationPath",
+        pathLabels.join(" / ") || "No documented RepresentationPath yet"
+      ],
+      ["BHE mapping", example.bheMapping]
+    ];
+
+    for (const [term, detail] of values) {
+      const dt = document.createElement("dt");
+      dt.textContent = term;
+      const dd = document.createElement("dd");
+      dd.textContent = detail;
+      rows.append(dt, dd);
+    }
+
+    const argument = document.createElement("p");
+    argument.className = "adp-example-reading";
+    argument.textContent = example.argument;
+
+    item.append(title, rows, argument);
     list.append(item);
   }
 
