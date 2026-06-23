@@ -5,11 +5,13 @@ import type { BHEResultStatus, InteractionMode } from "../../core/types/index.js
  * authoring paths. A path points to a carrier; it does not instantiate it.
  */
 export type RepresentationInteractionDataType =
+  | "ClassificationDragDropData"
   | "IdentificationSelectionData"
   | "MemorizationTypingRecallData";
 
 /** Existing BHE UserInput interfaces referenced by the prototype. */
 export type RepresentationUserInputType =
+  | "ClassificationDragDropUserInput"
   | "ContextualTypingUserInput"
   | "IdentificationSelectionUserInput"
   | "MemorizationTypingRecallUserInput";

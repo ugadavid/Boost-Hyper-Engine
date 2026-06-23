@@ -91,6 +91,38 @@ export const representationPaths = [
     ]
   },
   {
+    pedagogicalUseId: "practice-through-controlled-interaction",
+    interaction: {
+      suggestedShape: "drag-drop",
+      interactionDataType: "ClassificationDragDropData",
+      fit: "semantic",
+      meaning:
+        "Stable categories and classifiable items are presented through a controlled drag/drop classification interaction."
+    },
+    input: {
+      type: "ClassificationDragDropUserInput",
+      fit: "semantic",
+      meaning:
+        "placements records which category each item was placed into by the learner."
+    },
+    evaluation: {
+      kind: "existing-evaluator",
+      correctness: "deterministic",
+      evaluator: "evaluateClassificationDragDrop"
+    },
+    result: {
+      statuses: ["success", "partial", "failed"],
+      score: "included",
+      meaning:
+        "The result reports classification performance by comparing each placement with the expected category."
+    },
+    authorNotes: [
+      "Use this path when categories are stable and item-category membership is known.",
+      "This materializes the Compare -> Categories -> ClassificationSet route without creating a Compare-specific core concept.",
+      "Use Explore Before The Rule instead when categories are still emerging or hypothesis formation is the main activity."
+    ]
+  },
+  {
     pedagogicalUseId: "reflect-through-typing",
     interaction: {
       suggestedShape: "typing",

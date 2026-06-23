@@ -111,6 +111,26 @@ export type BHEPathConnectionStatus =
   | "partial-bhe-path"
   | "demo-only";
 
+export type RouteRealizationStatus =
+  | "exists-completely"
+  | "partially-exists"
+  | "missing-pieces";
+
+export interface RouteRealizationEntry {
+  id: string;
+  label: string;
+  route: readonly string[];
+  status: RouteRealizationStatus;
+  statusLabel: string;
+  bheStructure: string;
+  representationPath: string;
+  renderer: string;
+  evaluator: string;
+  existingPieces: readonly string[];
+  missingPieces: readonly string[];
+  reading: string;
+}
+
 export interface AuthorDiscoveryExample {
   id: string;
   title: string;
@@ -294,7 +314,10 @@ export const compareClarificationOptions = [
       "practice-through-controlled-interaction",
       "explore-before-rule"
     ],
-    suggestedRepresentationPathIds: ["explore-before-rule"],
+    suggestedRepresentationPathIds: [
+      "practice-through-controlled-interaction",
+      "explore-before-rule"
+    ],
     bheMapping: "ClassificationSet",
     explanation:
       "Choose this when comparison helps learners decide which category an example belongs to.",
@@ -416,7 +439,10 @@ export const compareValidationExamples = [
       "practice-through-controlled-interaction",
       "explore-before-rule"
     ],
-    suggestedRepresentationPathIds: ["explore-before-rule"],
+    suggestedRepresentationPathIds: [
+      "practice-through-controlled-interaction",
+      "explore-before-rule"
+    ],
     bheMapping: "ClassificationSet, with InferenceSet visible during discovery",
     argument:
       "The dominant comparison is countable vs uncountable category membership. Hypotheses remains important because learners first test the distinction before it is stabilized."
@@ -839,6 +865,174 @@ export const produceValidationExamples = [
   }
 ] as const satisfies readonly ProduceValidationExample[];
 
+export const routeRealizations = [
+  {
+    id: "compare-categories-classification",
+    label: "Route A",
+    route: [
+      "Compare",
+      "Categories",
+      "Practice Through Controlled Interaction",
+      "RepresentationPath: practice-through-controlled-interaction",
+      "ClassificationSet",
+      "ClassificationDragDropData",
+      "ClassificationDragDropUserInput",
+      "Classification drag/drop or QCM interaction",
+      "Classification evaluator"
+    ],
+    status: "exists-completely",
+    statusLabel: "exists completely",
+    bheStructure: "ClassificationSet",
+    representationPath:
+      "Available: practice-through-controlled-interaction documents stable classification through ClassificationDragDropData.",
+    renderer:
+      "Available: classificationDragDropDomRenderer and classificationQcmDomRenderer.",
+    evaluator:
+      "Available: evaluateClassificationDragDrop and evaluateClassificationQcm.",
+    existingPieces: [
+      "Compare clarification routes Categories toward ClassificationSet.",
+      "Practice Through Controlled Interaction provides the author-facing Pedagogical Use.",
+      "The RepresentationPath now references ClassificationDragDropData and ClassificationDragDropUserInput.",
+      "ClassificationSet exists in core.",
+      "Classification interaction adapters exist.",
+      "Classification DOM renderers exist.",
+      "Classification evaluators exist.",
+      "The Countable / Uncountable playground example already runs on a real BHE path."
+    ],
+    missingPieces: [
+      "None for the stable category classification route."
+    ],
+    reading:
+      "The authoring bridge and the real BHE engine route are both explicit for stable categories."
+  },
+  {
+    id: "compare-before-after-transformation",
+    label: "Route B",
+    route: [
+      "Compare",
+      "Before / After Forms",
+      "TransformationSet",
+      "Transformation typing interaction",
+      "Transformation evaluator"
+    ],
+    status: "partially-exists",
+    statusLabel: "partially exists",
+    bheStructure: "TransformationSet",
+    representationPath:
+      "No dedicated authoring RepresentationPath is documented for transformation typing yet.",
+    renderer: "Available: transformationTypingDomRenderer.",
+    evaluator: "Available: evaluateTransformationTyping.",
+    existingPieces: [
+      "Compare clarification routes Before / After Forms toward TransformationSet.",
+      "TransformationSet exists in core.",
+      "Transformation typing adapter exists.",
+      "Transformation typing DOM renderer exists.",
+      "Transformation evaluator exists.",
+      "The Passive Voice playground example already runs on a real BHE path."
+    ],
+    missingPieces: [
+      "A visible authoring RepresentationPath connecting the Compare clarification to TransformationSet."
+    ],
+    reading:
+      "The BHE engine route is real; the authoring bridge is still implicit."
+  },
+  {
+    id: "produce-recalled-target-memorization",
+    label: "Route C",
+    route: [
+      "Produce",
+      "Recalled Target",
+      "Recall Through Typing",
+      "MemorizationTypingRecall",
+      "Memorization evaluator"
+    ],
+    status: "partially-exists",
+    statusLabel: "partially exists",
+    bheStructure: "MemorizationSet -> MemorizationTypingRecallData",
+    representationPath: "Available: recall-through-typing.",
+    renderer:
+      "Not found for typing recall. Memorization flashcard renderers exist, but they do not cover this route.",
+    evaluator: "Available: evaluateMemorizationTypingRecall.",
+    existingPieces: [
+      "Produce clarification routes Recalled Target toward Recall Through Typing.",
+      "Recall Through Typing exists as a RepresentationPath.",
+      "MemorizationSet and MemorizationTypingRecallData exist.",
+      "Memorization typing recall UserInput exists.",
+      "Memorization typing recall evaluator exists."
+    ],
+    missingPieces: [
+      "A real DOM renderer for MemorizationTypingRecall."
+    ],
+    reading:
+      "The cognitive and evaluation path is real, but the interactive UI path is incomplete."
+  },
+  {
+    id: "reflect-strategies-selection-completed",
+    label: "Route D",
+    route: [
+      "Reflect",
+      "Strategies",
+      "Reflect Through Selection",
+      "IdentificationSelectionData",
+      "BHEResult.completed"
+    ],
+    status: "partially-exists",
+    statusLabel: "partially exists",
+    bheStructure: "IdentificationSet as carrier -> IdentificationSelectionData",
+    representationPath: "Available: reflect-through-selection.",
+    renderer:
+      "No neutral reflective selection renderer yet. The playground currently uses a small authoring-only UI.",
+    evaluator:
+      "No corrective evaluator is needed. Completion can use createCompletedResultFromUserInput.",
+    existingPieces: [
+      "Reflect clarification routes Strategies toward Reflect Through Selection.",
+      "Reflect Through Selection exists as a RepresentationPath.",
+      "IdentificationSet can carry selectable statements.",
+      "IdentificationSelectionData and IdentificationSelectionUserInput exist.",
+      "createCompletedResultFromUserInput reaches BHEResult.completed.",
+      "FeedbackData.completed can be mounted."
+    ],
+    missingPieces: [
+      "A real neutral reflective selection renderer.",
+      "A stable convention for renderer behavior when selection is non-corrective."
+    ],
+    reading:
+      "The completed result path is real; the missing piece is mostly UI contract and renderer placement."
+  },
+  {
+    id: "apply-language-in-context-situated-task",
+    label: "Route E",
+    route: [
+      "Apply",
+      "Language in Context",
+      "Apply Through Situated Task",
+      "Contextual response",
+      "Context-dependent result policy"
+    ],
+    status: "missing-pieces",
+    statusLabel: "missing pieces",
+    bheStructure:
+      "Closest current carrier: ContextualTypingUserInput. No dedicated situated-task structure is visible.",
+    representationPath: "Available: apply-through-situated-task.",
+    renderer:
+      "No dedicated situated task renderer was found. Existing contextual typing appears tied to gap-fill-like use.",
+    evaluator:
+      "No general situated-task evaluator was found. Success criteria remain authored and context-dependent.",
+    existingPieces: [
+      "Apply Through Situated Task exists as a RepresentationPath.",
+      "The authoring route is understandable.",
+      "ContextualTypingUserInput gives a possible carrier for submitted language."
+    ],
+    missingPieces: [
+      "A concrete BHE structure for situated tasks.",
+      "A renderer for situated contextual action.",
+      "A general evaluation or completion convention for contextual success."
+    ],
+    reading:
+      "The authoring intent is clear, but the real BHE route remains mostly unbuilt."
+  }
+] as const satisfies readonly RouteRealizationEntry[];
+
 export const authorDiscoveryExamples = [
   {
     id: "thinking-in-english-reflect-selection",
@@ -950,13 +1144,13 @@ const representationConfidenceByUseId: Record<string, RepresentationConfidence> 
     ]
   },
   "practice-through-controlled-interaction": {
-    level: "plausible",
-    label: "PLAUSIBLE",
-    badge: "PLAUSIBLE",
+    level: "ready",
+    label: "READY",
+    badge: "READY",
     reasons: [
-      "Interaction shapes exist",
-      "Several BHE pipelines already cover practice cases",
-      "No single documented RepresentationPath yet"
+      "RepresentationPath documented for stable classification",
+      "ClassificationSet pipeline available",
+      "Renderer and evaluator identified"
     ]
   },
   "explore-before-rule": {
@@ -1070,7 +1264,7 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
     root.className = "author-discovery-playground";
 
     const title = document.createElement("h1");
-    title.textContent = "Author Discovery Playground V0.6";
+    title.textContent = "Author Discovery Playground V0.8";
 
     const subtitle = document.createElement("p");
     subtitle.className = "adp-subtitle";
@@ -1079,6 +1273,7 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
 
     const coverage = renderCoverage(getAuthorCoverageStats());
     const routingMap = renderAuthorIntentRoutingMap(selectedIntentId);
+    const routeRealization = renderRouteRealization();
 
     const layout = document.createElement("div");
     layout.className = "adp-layout";
@@ -1110,7 +1305,7 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
         : renderDetailPanel(selectedIntent, selectedUseView);
 
     layout.append(intentPanel, usePanel, detailPanel);
-    root.append(title, subtitle, coverage, routingMap, layout);
+    root.append(title, subtitle, coverage, routingMap, routeRealization, layout);
 
     const selectIntentFromButton = (button: HTMLButtonElement): void => {
       selectedIntentId = button.dataset.intentId ?? selectedIntentId;
@@ -1237,6 +1432,113 @@ function renderAuthorIntentRoutingMap(selectedIntentId: string): HTMLElement {
 
   section.append(heading, intro, cards);
   return section;
+}
+
+function renderRouteRealization(): HTMLElement {
+  const section = document.createElement("section");
+  section.className = "adp-routing-map adp-route-realization";
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Route Realization";
+
+  const intro = document.createElement("p");
+  intro.className = "adp-panel-note";
+  intro.textContent =
+    "This view checks whether discovered authoring routes already reach real BHE structures, renderers, and evaluators.";
+
+  const grid = document.createElement("div");
+  grid.className = "adp-realization-grid";
+
+  for (const entry of routeRealizations) {
+    const card = document.createElement("article");
+    card.className = "adp-realization-card";
+
+    const title = document.createElement("h3");
+    title.textContent = entry.label;
+
+    const status = document.createElement("span");
+    status.className = `adp-realization-status ${getRouteRealizationStatusClass(
+      entry.status
+    )}`;
+    status.textContent = entry.statusLabel;
+
+    const route = document.createElement("ol");
+    route.className = "adp-realization-route";
+    for (const step of entry.route) {
+      const item = document.createElement("li");
+      item.textContent = step;
+      route.append(item);
+    }
+
+    const details = document.createElement("dl");
+    details.className = "adp-step-mapping";
+    appendMapping(details, "BHE structure", entry.bheStructure);
+    appendMapping(details, "RepresentationPath", entry.representationPath);
+    appendMapping(details, "Renderer", entry.renderer);
+    appendMapping(details, "Evaluator", entry.evaluator);
+
+    const existing = renderCompactList("Existing pieces", entry.existingPieces);
+    const missing = renderCompactList("Missing pieces", entry.missingPieces);
+
+    const reading = document.createElement("p");
+    reading.className = "adp-panel-note";
+    reading.textContent = entry.reading;
+
+    card.append(title, status, route, details, existing, missing, reading);
+    grid.append(card);
+  }
+
+  section.append(heading, intro, grid);
+  return section;
+}
+
+function renderCompactList(
+  headingText: string,
+  items: readonly string[]
+): HTMLElement {
+  const block = document.createElement("div");
+  block.className = "adp-realization-list";
+
+  const heading = document.createElement("h4");
+  heading.textContent = headingText;
+
+  const list = document.createElement("ul");
+  for (const item of items) {
+    const listItem = document.createElement("li");
+    listItem.textContent = item;
+    list.append(listItem);
+  }
+
+  block.append(heading, list);
+  return block;
+}
+
+function appendMapping(
+  list: HTMLDListElement,
+  label: string,
+  value: string
+): void {
+  const term = document.createElement("dt");
+  term.textContent = label;
+
+  const description = document.createElement("dd");
+  description.textContent = value;
+
+  list.append(term, description);
+}
+
+function getRouteRealizationStatusClass(
+  status: RouteRealizationStatus
+): string {
+  if (status === "exists-completely") {
+    return "is-complete";
+  }
+
+  if (status === "partially-exists") {
+    return "is-partial";
+  }
+
+  return "is-missing";
 }
 
 function getRoutingTypeClass(type: AuthorIntentRoutingType): string {
