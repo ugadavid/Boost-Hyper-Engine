@@ -14,7 +14,7 @@ export interface FeedbackMessage {
 }
 
 export interface FeedbackData {
-  status: "success" | "partial" | "failed";
+  status: "success" | "partial" | "failed" | "completed" | "skipped";
   summary: FeedbackMessage;
   messages?: FeedbackMessage[];
   metadata?: Record<string, unknown>;

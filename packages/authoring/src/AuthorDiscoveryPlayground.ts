@@ -1,12 +1,13 @@
 import { identificationToSelectionData } from "../../core/adapters/index.js";
+import { createCompletedResultFromUserInput } from "../../core/results/index.js";
 import { renderClassificationDragDropDom } from "../../renderer/renderers/classificationDragDropDomRenderer.js";
 import { renderTransformationTypingDom } from "../../renderer/renderers/transformationTypingDomRenderer.js";
+import { mountFeedbackFromResult } from "../../renderer/feedback/feedbackMounting.js";
 import { authorOrchestrationPaths } from "./AuthorOrchestrationPaths.js";
 import { pedagogicalUseCatalog } from "./PedagogicalUseCatalog.js";
 import { representationPaths } from "./RepresentationPaths.js";
 import type { AuthorOrchestrationPath } from "./AuthorOrchestrationPath.js";
 import type {
-  BHEResult,
   ClassificationSet,
   IdentificationSelectionUserInput,
   IdentificationSet,
@@ -314,9 +315,9 @@ export const compareValidationExamples = [
   {
     id: "thinking-in-english-compare-validation",
     brick: "Thinking in English",
-    bhePathStatus: "partial-bhe-path",
+    bhePathStatus: "real-bhe-path",
     bhePathStatusReason:
-      "RepresentationPath, IdentificationSelectionData, UserInput, and BHEResult.completed can be expressed, but the existing renderer/evaluator is corrective rather than non-evaluative.",
+      "IdentificationSelectionData, UserInput, a non-corrective completed result helper, and the shared feedback tail are connected.",
     clarificationOptionId: "strategies-habits",
     clarificationChoice: "Strategies / Habits",
     alternativeChoices: ["Categories"],
@@ -1122,7 +1123,7 @@ function renderDemoShell(
   const body = document.createElement("div");
   body.className = "adp-demo-body";
 
-  const feedback = document.createElement("p");
+  const feedback = document.createElement("div");
   feedback.className = "adp-demo-feedback";
   feedback.textContent = "Demo ready.";
 
@@ -1299,8 +1300,8 @@ function renderPassiveVoiceDemo(): HTMLElement {
 
 function renderThinkingInEnglishDemo(): HTMLElement {
   const { shell, body, feedback } = renderDemoShell(
-    "Partial BHE selection path",
-    "Route: Compare -> Strategies / Habits -> Reflect Through Selection -> IdentificationSelectionData + UserInput -> BHEResult.completed"
+    "Real completed selection path",
+    "Route: Compare -> Strategies / Habits -> Reflect Through Selection -> IdentificationSelectionData + UserInput -> completed result helper -> BHEResult.completed -> shared feedback"
   );
 
   const selectionData = identificationToSelectionData(
@@ -1309,7 +1310,7 @@ function renderThinkingInEnglishDemo(): HTMLElement {
 
   const instruction = document.createElement("p");
   instruction.textContent =
-    "This example uses a real IdentificationSet adapter to produce IdentificationSelectionData, then records IdentificationSelectionUserInput. It does not use the existing Identification evaluator because that evaluator is corrective; this reflective path needs completion semantics.";
+    "This example uses a real IdentificationSet adapter to produce IdentificationSelectionData, records IdentificationSelectionUserInput, then emits BHEResult.completed through the non-corrective completion helper. It does not use the existing Identification evaluator because that evaluator is corrective.";
 
   const list = document.createElement("div");
   list.className = "adp-demo-checkboxes";
@@ -1325,16 +1326,16 @@ function renderThinkingInEnglishDemo(): HTMLElement {
       timestamp: new Date().toISOString(),
       selectedTargetIds
     };
-    const result: BHEResult<{ selectedTargetIds: string[] }> = {
+    const result = createCompletedResultFromUserInput({
       objectId: thinkingInEnglishIdentificationSet.metadata.id,
-      status: "completed",
-      completion: 1,
+      input,
       details: {
         selectedTargetIds: input.selectedTargetIds
-      }
-    };
+      },
+      signals: ["non-evaluative", "reflective-selection"]
+    });
 
-    feedback.textContent = `Partial path: ${input.selectedTargetIds.length} selected. Emitted ${result.status}; no corrective evaluator used.`;
+    mountFeedbackFromResult({ result, container: feedback });
   };
 
   for (const target of selectionData.targets) {

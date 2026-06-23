@@ -34,6 +34,10 @@ function hasIsCorrect(details: unknown): details is DetailsWithIsCorrect {
 }
 
 function feedbackStatus(result: BHEResult): FeedbackData["status"] {
+  if (result.status === "completed" || result.status === "skipped") {
+    return result.status;
+  }
+
   if (
     result.status === "partial" ||
     (
@@ -50,6 +54,22 @@ function feedbackStatus(result: BHEResult): FeedbackData["status"] {
 }
 
 function summaryMessage(status: FeedbackData["status"]): FeedbackMessage {
+  if (status === "completed") {
+    return {
+      id: "feedback-summary-completed",
+      severity: "info",
+      message: "Completed."
+    };
+  }
+
+  if (status === "skipped") {
+    return {
+      id: "feedback-summary-skipped",
+      severity: "info",
+      message: "Skipped."
+    };
+  }
+
   if (status === "success") {
     return {
       id: "feedback-summary-success",
