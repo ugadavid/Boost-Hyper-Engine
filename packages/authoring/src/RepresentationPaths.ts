@@ -91,6 +91,7 @@ export const representationPaths = [
     ]
   },
   {
+    id: "practice-through-controlled-classification",
     pedagogicalUseId: "practice-through-controlled-interaction",
     interaction: {
       suggestedShape: "drag-drop",
@@ -120,6 +121,39 @@ export const representationPaths = [
       "Use this path when categories are stable and item-category membership is known.",
       "This materializes the Compare -> Categories -> ClassificationSet route without creating a Compare-specific core concept.",
       "Use Explore Before The Rule instead when categories are still emerging or hypothesis formation is the main activity."
+    ]
+  },
+  {
+    id: "practice-through-controlled-transformation",
+    pedagogicalUseId: "practice-through-controlled-interaction",
+    interaction: {
+      suggestedShape: "typing",
+      interactionDataType: "TransformationInteractionData",
+      fit: "semantic",
+      meaning:
+        "A source form is shown and the learner produces the expected transformed form."
+    },
+    input: {
+      type: "TransformationTypingUserInput",
+      fit: "semantic",
+      meaning:
+        "attempts records each transformed answer submitted by the learner for a source item."
+    },
+    evaluation: {
+      kind: "existing-evaluator",
+      correctness: "deterministic",
+      evaluator: "evaluateTransformationTyping"
+    },
+    result: {
+      statuses: ["success", "partial", "failed"],
+      score: "included",
+      meaning:
+        "The result reports transformation performance by comparing each typed form with expected or accepted answers."
+    },
+    authorNotes: [
+      "Use this path when learners compare before/after forms through an expected source-to-target transformation.",
+      "This materializes the Compare -> Before / After Forms -> TransformationSet route without creating a Compare-specific core concept.",
+      "Use exploratory or inferential paths instead when learners are still discovering the transformation rule."
     ]
   },
   {

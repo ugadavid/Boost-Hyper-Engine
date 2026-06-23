@@ -7,14 +7,16 @@ import type { BHEResultStatus, InteractionMode } from "../../core/types/index.js
 export type RepresentationInteractionDataType =
   | "ClassificationDragDropData"
   | "IdentificationSelectionData"
-  | "MemorizationTypingRecallData";
+  | "MemorizationTypingRecallData"
+  | "TransformationInteractionData";
 
 /** Existing BHE UserInput interfaces referenced by the prototype. */
 export type RepresentationUserInputType =
   | "ClassificationDragDropUserInput"
   | "ContextualTypingUserInput"
   | "IdentificationSelectionUserInput"
-  | "MemorizationTypingRecallUserInput";
+  | "MemorizationTypingRecallUserInput"
+  | "TransformationTypingUserInput";
 
 /** How closely an existing BHE carrier expresses the intended response. */
 export type RepresentationFit = "semantic" | "structural";
@@ -50,6 +52,11 @@ export interface RepresentationResultExpectation {
  * input, call an evaluator, or emit a BHEResult.
  */
 export interface RepresentationPath {
+  /**
+   * Optional authoring identifier for distinguishing several existing BHE
+   * carriers under the same PedagogicalUse.
+   */
+  id?: string;
   pedagogicalUseId: string;
   interaction: {
     suggestedShape: InteractionMode;

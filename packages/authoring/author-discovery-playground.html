@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Author Discovery Playground V0.8</title>
+    <title>Author Discovery Playground V1.1</title>
     <style>
       :root {
         color: #162033;
@@ -219,6 +219,92 @@
         margin: 0 0 0 18px;
         color: #536071;
         font-size: 0.88rem;
+      }
+
+      .bhe-memorization-typing-recall {
+        display: grid;
+        gap: 12px;
+      }
+
+      .bhe-memorization-typing-recall__goal,
+      .bhe-memorization-typing-recall__hint {
+        color: #536071;
+      }
+
+      .bhe-memorization-typing-recall__items {
+        display: grid;
+        gap: 10px;
+      }
+
+      .bhe-memorization-typing-recall__item {
+        padding: 12px;
+        background: #fffaf3;
+        border: 1px solid #eadfce;
+        border-radius: 12px;
+      }
+
+      .bhe-memorization-typing-recall__item.is-correct {
+        border-color: #7fba8e;
+        background: #f2fbf4;
+      }
+
+      .bhe-memorization-typing-recall__item.is-incorrect {
+        border-color: #d99b90;
+        background: #fff5f3;
+      }
+
+      .bhe-memorization-typing-recall__label,
+      .bhe-memorization-typing-recall__input-label {
+        display: block;
+        margin-bottom: 4px;
+        color: #865817;
+        font-weight: 800;
+      }
+
+      .bhe-memorization-typing-recall__input {
+        width: 100%;
+        max-width: 340px;
+        padding: 8px 10px;
+        border: 1px solid #d9c7ac;
+        border-radius: 10px;
+      }
+
+      .bhe-memorization-typing-recall__actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .bhe-reflective-selection {
+        display: grid;
+        gap: 12px;
+      }
+
+      .bhe-reflective-selection__context {
+        color: #536071;
+      }
+
+      .bhe-reflective-selection__fieldset {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+        border: 1px solid #eadfce;
+        border-radius: 12px;
+      }
+
+      .bhe-reflective-selection__option {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        padding: 8px;
+        background: #fffaf3;
+        border-radius: 10px;
+      }
+
+      .bhe-reflective-selection__actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
       }
 
       .adp-panel {

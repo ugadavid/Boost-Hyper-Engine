@@ -1,16 +1,15 @@
-import { identificationToSelectionData } from "../../core/adapters/index.js";
-import { createCompletedResultFromUserInput } from "../../core/results/index.js";
 import { renderClassificationDragDropDom } from "../../renderer/renderers/classificationDragDropDomRenderer.js";
+import { renderMemorizationTypingRecallDom } from "../../renderer/renderers/memorizationTypingRecallDomRenderer.js";
+import { renderReflectiveSelectionDom } from "../../renderer/renderers/reflectiveSelectionDomRenderer.js";
 import { renderTransformationTypingDom } from "../../renderer/renderers/transformationTypingDomRenderer.js";
-import { mountFeedbackFromResult } from "../../renderer/feedback/feedbackMounting.js";
 import { authorOrchestrationPaths } from "./AuthorOrchestrationPaths.js";
 import { pedagogicalUseCatalog } from "./PedagogicalUseCatalog.js";
 import { representationPaths } from "./RepresentationPaths.js";
 import type { AuthorOrchestrationPath } from "./AuthorOrchestrationPath.js";
 import type {
   ClassificationSet,
-  IdentificationSelectionUserInput,
   IdentificationSet,
+  MemorizationSet,
   TransformationSet
 } from "../../core/types/index.js";
 import type { PedagogicalUse } from "./PedagogicalUse.js";
@@ -353,7 +352,7 @@ export const compareClarificationOptions = [
       "source ↔ transformed form"
     ],
     suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
-    suggestedRepresentationPathIds: [],
+    suggestedRepresentationPathIds: ["practice-through-controlled-transformation"],
     bheMapping: "TransformationSet",
     explanation:
       "Choose this when comparison is about a source form becoming a target form through a rule or operation.",
@@ -457,7 +456,7 @@ export const compareValidationExamples = [
     clarificationChoice: "Before / After Forms",
     alternativeChoices: ["Categories", "Hypotheses"],
     suggestedPedagogicalUseIds: ["practice-through-controlled-interaction"],
-    suggestedRepresentationPathIds: [],
+    suggestedRepresentationPathIds: ["practice-through-controlled-transformation"],
     bheMapping: "TransformationSet",
     argument:
       "The most natural route is active form to passive form, with a visible source-to-target relation. Categories can support recognition, and hypotheses may appear in critical-reading extensions."
@@ -911,19 +910,25 @@ export const routeRealizations = [
     route: [
       "Compare",
       "Before / After Forms",
+      "Practice Through Controlled Interaction",
+      "RepresentationPath: practice-through-controlled-transformation",
       "TransformationSet",
+      "TransformationInteractionData",
+      "TransformationTypingUserInput",
       "Transformation typing interaction",
       "Transformation evaluator"
     ],
-    status: "partially-exists",
-    statusLabel: "partially exists",
+    status: "exists-completely",
+    statusLabel: "exists completely",
     bheStructure: "TransformationSet",
     representationPath:
-      "No dedicated authoring RepresentationPath is documented for transformation typing yet.",
+      "Available: practice-through-controlled-transformation documents before/after forms through TransformationInteractionData.",
     renderer: "Available: transformationTypingDomRenderer.",
     evaluator: "Available: evaluateTransformationTyping.",
     existingPieces: [
       "Compare clarification routes Before / After Forms toward TransformationSet.",
+      "Practice Through Controlled Interaction provides the author-facing Pedagogical Use.",
+      "The RepresentationPath now references TransformationInteractionData and TransformationTypingUserInput.",
       "TransformationSet exists in core.",
       "Transformation typing adapter exists.",
       "Transformation typing DOM renderer exists.",
@@ -931,10 +936,10 @@ export const routeRealizations = [
       "The Passive Voice playground example already runs on a real BHE path."
     ],
     missingPieces: [
-      "A visible authoring RepresentationPath connecting the Compare clarification to TransformationSet."
+      "None for the stable before/after transformation route."
     ],
     reading:
-      "The BHE engine route is real; the authoring bridge is still implicit."
+      "The authoring bridge and the real BHE engine route are both explicit for before/after transformations."
   },
   {
     id: "produce-recalled-target-memorization",
@@ -943,28 +948,33 @@ export const routeRealizations = [
       "Produce",
       "Recalled Target",
       "Recall Through Typing",
+      "RepresentationPath: recall-through-typing",
       "MemorizationTypingRecall",
+      "MemorizationTypingRecallData",
+      "MemorizationTypingRecallUserInput",
+      "Memorization typing recall renderer",
       "Memorization evaluator"
     ],
-    status: "partially-exists",
-    statusLabel: "partially exists",
+    status: "exists-completely",
+    statusLabel: "exists completely",
     bheStructure: "MemorizationSet -> MemorizationTypingRecallData",
     representationPath: "Available: recall-through-typing.",
     renderer:
-      "Not found for typing recall. Memorization flashcard renderers exist, but they do not cover this route.",
+      "Available: memorizationTypingRecallDomRenderer.",
     evaluator: "Available: evaluateMemorizationTypingRecall.",
     existingPieces: [
       "Produce clarification routes Recalled Target toward Recall Through Typing.",
       "Recall Through Typing exists as a RepresentationPath.",
       "MemorizationSet and MemorizationTypingRecallData exist.",
       "Memorization typing recall UserInput exists.",
+      "Memorization typing recall DOM renderer exists.",
       "Memorization typing recall evaluator exists."
     ],
     missingPieces: [
-      "A real DOM renderer for MemorizationTypingRecall."
+      "None for typed target recall."
     ],
     reading:
-      "The cognitive and evaluation path is real, but the interactive UI path is incomplete."
+      "The authoring bridge, renderer, evaluator, and feedback loop are now explicit for typed target recall."
   },
   {
     id: "reflect-strategies-selection-completed",
@@ -973,15 +983,18 @@ export const routeRealizations = [
       "Reflect",
       "Strategies",
       "Reflect Through Selection",
+      "RepresentationPath: reflect-through-selection",
       "IdentificationSelectionData",
+      "IdentificationSelectionUserInput",
+      "Reflective selection renderer",
       "BHEResult.completed"
     ],
-    status: "partially-exists",
-    statusLabel: "partially exists",
+    status: "exists-completely",
+    statusLabel: "exists completely",
     bheStructure: "IdentificationSet as carrier -> IdentificationSelectionData",
     representationPath: "Available: reflect-through-selection.",
     renderer:
-      "No neutral reflective selection renderer yet. The playground currently uses a small authoring-only UI.",
+      "Available: reflectiveSelectionDomRenderer.",
     evaluator:
       "No corrective evaluator is needed. Completion can use createCompletedResultFromUserInput.",
     existingPieces: [
@@ -989,15 +1002,15 @@ export const routeRealizations = [
       "Reflect Through Selection exists as a RepresentationPath.",
       "IdentificationSet can carry selectable statements.",
       "IdentificationSelectionData and IdentificationSelectionUserInput exist.",
+      "Reflective selection DOM renderer exists.",
       "createCompletedResultFromUserInput reaches BHEResult.completed.",
       "FeedbackData.completed can be mounted."
     ],
     missingPieces: [
-      "A real neutral reflective selection renderer.",
-      "A stable convention for renderer behavior when selection is non-corrective."
+      "None for neutral reflective selection completion."
     ],
     reading:
-      "The completed result path is real; the missing piece is mostly UI contract and renderer placement."
+      "The neutral selection renderer, completed result path, and feedback loop are now explicit."
   },
   {
     id: "apply-language-in-context-situated-task",
@@ -1080,9 +1093,25 @@ export const authorDiscoveryExamples = [
   }
 ] as const satisfies readonly AuthorDiscoveryExample[];
 
-const pathByUseId = new Map<string, RepresentationPath>(
-  representationPaths.map((path) => [path.pedagogicalUseId, path])
+function getRepresentationPathId(path: RepresentationPath): string {
+  return path.id ?? path.pedagogicalUseId;
+}
+
+const pathById = new Map<string, RepresentationPath>(
+  representationPaths.map((path) => [getRepresentationPathId(path), path])
 );
+
+const pathByUseId = new Map<string, RepresentationPath>();
+
+for (const path of representationPaths) {
+  if (!pathByUseId.has(path.pedagogicalUseId)) {
+    pathByUseId.set(path.pedagogicalUseId, path);
+  }
+}
+
+function findRepresentationPath(reference: string): RepresentationPath | undefined {
+  return pathById.get(reference) ?? pathByUseId.get(reference);
+}
 
 const orchestrationPathByUseId = new Map<string, AuthorOrchestrationPath>(
   authorOrchestrationPaths.map((path) => [path.pedagogicalUseId, path])
@@ -1264,7 +1293,7 @@ export function renderAuthorDiscoveryPlayground(root: HTMLElement): void {
     root.className = "author-discovery-playground";
 
     const title = document.createElement("h1");
-    title.textContent = "Author Discovery Playground V0.8";
+    title.textContent = "Author Discovery Playground V1.1";
 
     const subtitle = document.createElement("p");
     subtitle.className = "adp-subtitle";
@@ -2133,7 +2162,7 @@ function renderCompareMapping(option: CompareClarificationOption): HTMLElement {
     .filter((label): label is string => Boolean(label));
 
   const pathLabels = option.suggestedRepresentationPathIds.map((pathId) => {
-    const path = pathByUseId.get(pathId);
+    const path = findRepresentationPath(pathId);
     const orchestrationPath = orchestrationPathByUseId.get(pathId);
 
     if (path) {
@@ -2204,7 +2233,7 @@ function renderProduceMapping(option: ProduceClarificationOption): HTMLElement {
     .filter((useLabel): useLabel is string => Boolean(useLabel));
 
   const pathLabels = option.suggestedRepresentationPathIds.map((pathId) => {
-    const path = pathByUseId.get(pathId);
+    const path = findRepresentationPath(pathId);
     const orchestrationPath = orchestrationPathByUseId.get(pathId);
 
     if (path) {
@@ -2276,7 +2305,7 @@ function renderReflectMapping(option: ReflectClarificationOption): HTMLElement {
     .filter((useLabel): useLabel is string => Boolean(useLabel));
 
   const pathLabels = option.suggestedRepresentationPathIds.map((pathId) => {
-    const path = pathByUseId.get(pathId);
+    const path = findRepresentationPath(pathId);
     const orchestrationPath = orchestrationPathByUseId.get(pathId);
 
     if (path) {
@@ -2369,7 +2398,7 @@ function renderCompareValidationExamples(): HTMLElement {
       .filter((useLabel): useLabel is string => Boolean(useLabel));
 
     const pathLabels = example.suggestedRepresentationPathIds.map((pathId) => {
-      const path = pathByUseId.get(pathId);
+      const path = findRepresentationPath(pathId);
       const orchestrationPath = orchestrationPathByUseId.get(pathId);
 
       if (path) {
@@ -2450,7 +2479,7 @@ function renderReflectValidationExamples(): HTMLElement {
       .filter((useLabel): useLabel is string => Boolean(useLabel));
 
     const pathLabels = example.suggestedRepresentationPathIds.map((pathId) => {
-      const path = pathByUseId.get(pathId);
+      const path = findRepresentationPath(pathId);
       const orchestrationPath = orchestrationPathByUseId.get(pathId);
 
       if (path) {
@@ -2527,7 +2556,7 @@ function renderProduceValidationExamples(): HTMLElement {
       .filter((useLabel): useLabel is string => Boolean(useLabel));
 
     const pathLabels = example.suggestedRepresentationPathIds.map((pathId) => {
-      const path = pathByUseId.get(pathId);
+      const path = findRepresentationPath(pathId);
       const orchestrationPath = orchestrationPathByUseId.get(pathId);
 
       if (path) {
@@ -2566,7 +2595,7 @@ function renderProduceValidationExamples(): HTMLElement {
     argument.className = "adp-example-reading";
     argument.textContent = example.argument;
 
-    item.append(title, rows, argument);
+    item.append(title, rows, argument, renderProduceInteractiveExample(example));
     list.append(item);
   }
 
@@ -2614,6 +2643,17 @@ function renderInteractiveExample(example: CompareValidationExample): HTMLElemen
   const empty = document.createElement("div");
   empty.className = "adp-demo";
   empty.textContent = "No demo interactive example is attached to this validation yet.";
+  return empty;
+}
+
+function renderProduceInteractiveExample(example: ProduceValidationExample): HTMLElement {
+  if (example.id === "memorising-vocabulary-produce-validation") {
+    return renderMemorisingVocabularyDemo();
+  }
+
+  const empty = document.createElement("div");
+  empty.className = "adp-demo";
+  empty.textContent = "No interactive example is attached to this validation yet.";
   return empty;
 }
 
@@ -2735,6 +2775,46 @@ const passiveVoiceTransformationSet: TransformationSet = {
   }
 };
 
+const memorisingVocabularySet: MemorizationSet = {
+  kind: "pedagogical-object",
+  pedagogicalFamily: "retentive",
+  pedagogicalType: "memorization",
+  interactionModes: ["typing", "flashcards"],
+  metadata: {
+    id: "memorising-vocabulary-real-bhe-demo",
+    title: "Memorising Vocabulary"
+  },
+  learningGoal: {
+    domain: "english",
+    skill: "vocabulary",
+    topic: "active recall"
+  },
+  content: {
+    core: {
+      recallGoal: "Retrieve the English target from the cue before seeing it.",
+      items: [
+        {
+          id: "recall-journey",
+          cue: "A trip from one place to another",
+          target: "journey",
+          accepted: ["a journey"],
+          hint: "It starts with j."
+        },
+        {
+          id: "recall-improve",
+          cue: "To become better",
+          target: "improve",
+          hint: "Verb."
+        }
+      ]
+    }
+  },
+  cognitiveOperations: ["produce", "associate"],
+  validate() {
+    return this.content.core.items.length > 0;
+  }
+};
+
 const thinkingInEnglishIdentificationSet: IdentificationSet = {
   kind: "pedagogical-object",
   pedagogicalFamily: "interpretive",
@@ -2817,63 +2897,39 @@ function renderPassiveVoiceDemo(): HTMLElement {
   return shell;
 }
 
-function renderThinkingInEnglishDemo(): HTMLElement {
+function renderMemorisingVocabularyDemo(): HTMLElement {
   const { shell, body, feedback } = renderDemoShell(
-    "Real completed selection path",
-    "Route: Compare -> Strategies / Habits -> Reflect Through Selection -> IdentificationSelectionData + UserInput -> completed result helper -> BHEResult.completed -> shared feedback"
-  );
-
-  const selectionData = identificationToSelectionData(
-    thinkingInEnglishIdentificationSet
+    "Real MemorizationTypingRecall renderer",
+    "Route: Produce -> Recalled Target -> Recall Through Typing -> MemorizationTypingRecallData -> renderer -> evaluator"
   );
 
   const instruction = document.createElement("p");
   instruction.textContent =
-    "This example uses a real IdentificationSet adapter to produce IdentificationSelectionData, records IdentificationSelectionUserInput, then emits BHEResult.completed through the non-corrective completion helper. It does not use the existing Identification evaluator because that evaluator is corrective.";
+    "This example instantiates a real MemorizationSet and renders it with the memorization typing recall DOM renderer. The renderer captures typed attempts and calls the existing evaluator when Check is pressed.";
 
-  const list = document.createElement("div");
-  list.className = "adp-demo-checkboxes";
+  const rendered = renderMemorizationTypingRecallDom(memorisingVocabularySet);
+  feedback.textContent =
+    "Connected: MemorizationSet, MemorizationTypingRecallData, UserInput, renderer, evaluator, feedback.";
 
-  const updateFeedback = (): void => {
-    const selectedTargetIds = Array.from(
-      list.querySelectorAll<HTMLInputElement>(
-      "input[type='checkbox']:checked"
-      )
-    ).map((input) => input.value);
-    const input: IdentificationSelectionUserInput = {
-      kind: "identification-selection",
-      timestamp: new Date().toISOString(),
-      selectedTargetIds
-    };
-    const result = createCompletedResultFromUserInput({
-      objectId: thinkingInEnglishIdentificationSet.metadata.id,
-      input,
-      details: {
-        selectedTargetIds: input.selectedTargetIds
-      },
-      signals: ["non-evaluative", "reflective-selection"]
-    });
+  body.append(instruction, rendered);
+  return shell;
+}
 
-    mountFeedbackFromResult({ result, container: feedback });
-  };
+function renderThinkingInEnglishDemo(): HTMLElement {
+  const { shell, body, feedback } = renderDemoShell(
+    "Real reflective selection renderer",
+    "Route: Reflect -> Strategies -> Reflect Through Selection -> IdentificationSelectionData -> renderer -> BHEResult.completed -> feedback"
+  );
 
-  for (const target of selectionData.targets) {
-    const label = document.createElement("label");
-    label.className = "adp-demo-checkbox";
+  const instruction = document.createElement("p");
+  instruction.textContent =
+    "This example instantiates a real IdentificationSet and renders it with the reflective selection DOM renderer. The renderer captures selected statements, emits BHEResult.completed, and mounts non-corrective feedback.";
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.value = target.targetId;
-    checkbox.addEventListener("change", updateFeedback);
+  const rendered = renderReflectiveSelectionDom(thinkingInEnglishIdentificationSet);
+  feedback.textContent =
+    "Connected: IdentificationSet, IdentificationSelectionData, UserInput, renderer, completed result, feedback.";
 
-    const text = document.createElement("span");
-    text.textContent = target.label;
-
-    label.append(checkbox, text);
-    list.append(label);
-  }
-
-  body.append(instruction, list);
+  body.append(instruction, rendered);
   return shell;
 }
 
