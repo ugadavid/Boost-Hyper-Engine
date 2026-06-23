@@ -197,6 +197,16 @@ L’index ne modifie pas le statut réel du projet. Il cartographie ce que les d
 | Playground Routing Visualization Report | `docs/architecture/20260623_playground-routing-visualization-report.md` | Visualisation du routage auteur | Expérimental | Matérialise dans le playground la carte des intentions : chaque intention affiche type de routage, question implicite, direction BHE et confiance. |
 | Produce Investigation | `docs/architecture/20260623_produce-investigation.md` | Enquête Produce | Expérimental | Montre que `Produce` n’est pas un chemin BHE mais un signal auteur à désambiguïser : rappel, gap-fill, transformation, inférence, réflexion, réponse située, etc. |
 | Produce Clarification Path Report | `docs/architecture/20260623_produce-clarification-path-report.md` | Clarification auteur Produce | Expérimental | Ajoute la question `What kind of production is expected?` et route Produce vers Recalled Target, Context-Fitting Answer, Transformed Form, Hypothesis, Reflection, Situated Response ou Communicative Clue. |
+| Classify Investigation | `docs/architecture/20260623_classify-investigation.md` | Enquête Classify | Expérimental | Analyse pourquoi `Classify` est hybride : classification de catégories stables, exploration de catégories émergentes, diagnostic ou inférence. |
+| Notice Investigation | `docs/architecture/20260623_notice-investigation.md` | Enquête Notice | Expérimental | Étudie ce que signifie `Help learners notice something` dans BHE : pattern, distinction, indice, habitude, stratégie, misconception ou relation. |
+| Apply Investigation | `docs/architecture/20260623_apply-investigation.md` | Enquête Apply | Expérimental | Montre que `Apply` reste hybride et dépend de ce qui est appliqué et de la situation dans laquelle l’apprenant agit. |
+| Authoring Route Realization Report | `docs/architecture/20260623_authoring-route-realization-report.md` | Réalisation des routes authoring | Référence | Introduit la mesure `exists completely / partially exists / missing pieces` pour distinguer route comprise, route partielle et route réellement branchée au système BHE. |
+| First Complete Route Realization Report | `docs/architecture/20260623_first-complete-route-realization-report.md` | Première route complète | Référence | Matérialise la route `Compare -> Categories -> ClassificationSet` comme première route authoring complète grâce à un `RepresentationPath` explicite. |
+| Second Complete Route Realization Report | `docs/architecture/20260623_second-complete-route-realization-report.md` | Deuxième route complète | Référence | Matérialise la route `Compare -> Before / After Forms -> TransformationSet` comme deuxième route complète, sans nouveau concept core. |
+| Memorization Typing Recall Renderer Report | `docs/architecture/20260623_memorization-typing-recall-renderer-report.md` | Renderer recall typing | Référence | Documente le renderer spécialisé `MemorizationTypingRecall`, qui complète la route `Produce -> Recalled Target -> Recall Through Typing`. |
+| Reflective Selection Renderer Report | `docs/architecture/20260623_reflective-selection-renderer-report.md` | Renderer sélection réflexive | Référence | Documente le renderer spécialisé de sélection réflexive non corrective, permettant `Reflect -> Strategies -> Reflect Through Selection -> completed`. |
+| Apply Completion Conditions Investigation | `docs/architecture/20260623_apply-completion-conditions-investigation.md` | Conditions de réussite située | Référence | Identifie la frontière restante pour `Apply Through Situated Task` : `situated response -> evidence of use -> BHEResult`. Conclut qu’Apply exige un modèle minimal d’évidence située. |
+| Authoring Cycle Synthesis | `docs/architecture/20260623_authoring-cycle-synthesis.md` | Synthèse du cycle authoring | Référence | Synthèse structurante de fin de cycle : le playground est devenu une surface de routage auteur, avec clarification, réalisation et validation corpus. |
 
 ## POCs et expérimentations
 
@@ -218,6 +228,9 @@ L’index ne modifie pas le statut réel du projet. Il cartographie ce que les d
 | Completed Path Spike Report | `docs/architecture/20260623_completed-path-spike-report.md` | Spike chemin completed | Référence | Spike minimal validant que Thinking in English peut produire un vrai `BHEResult.completed` et un feedback non correctif sans nouveau concept core. |
 | Playground Routing Visualization Report | `docs/architecture/20260623_playground-routing-visualization-report.md` | POC carte de routage auteur | Expérimental | Ajoute au playground une carte cliquable des comportements de routage : Self-routing, Clarification-routing et Hybrid. |
 | Produce Clarification Path Report | `docs/architecture/20260623_produce-clarification-path-report.md` | POC clarification Produce | Expérimental | Ajoute un chemin de clarification pour Produce et valide trois briques : Passive Voice, Memorising Vocabulary et Thinking in English. |
+| Authoring Route Realization Report | `docs/architecture/20260623_authoring-route-realization-report.md` | POC mesure des routes | Référence | Ajoute une vue qui vérifie si les routes authoring atteignent réellement le core, les renderers, les evaluators, les helpers de completion et le feedback. |
+| Memorization Typing Recall Renderer Report | `docs/architecture/20260623_memorization-typing-recall-renderer-report.md` | POC renderer recall | Référence | Crée la pièce manquante pour le rappel actif typé : cue, tentative saisie, evaluator existant et feedback. |
+| Reflective Selection Renderer Report | `docs/architecture/20260623_reflective-selection-renderer-report.md` | POC renderer réflexif | Référence | Crée la pièce manquante pour une sélection non corrective menant à `BHEResult.completed`, sans score ni bonne réponse. |
 
 ## Archives et documents historiques
 
@@ -237,52 +250,73 @@ Parcours de lecture recommandé, limité aux documents réellement utiles pour r
 1. `docs/architecture/20260618_principe_architectural.md`  
    Comprendre le principe récent : l’architecture doit être découvrable par l’auteur.
 
-2. `docs/architecture/bhe-complete-pipeline-and-content-unit.md`  
+2. `docs/architecture/20260623_authoring-cycle-synthesis.md`  
+   Comprendre l’état authoring actuel après le premier cycle : le playground est devenu une surface de routage auteur, pas un simple menu.
+
+3. `docs/architecture/bhe-complete-pipeline-and-content-unit.md`  
    Comprendre le pipeline global, les responsabilités et la place de ContentUnit.
 
-3. `docs/architecture/pedagogical-object-taxonomy.md`  
+4. `docs/architecture/pedagogical-object-taxonomy.md`  
    Comprendre les objets pédagogiques, familles, types et contenus.
 
-4. `docs/architecture/evaluation-pipeline.md`  
+5. `docs/architecture/evaluation-pipeline.md`  
    Comprendre le pipeline retour : UserInput, Evaluator, BHEResult, Feedback, AdaptiveRouting.
 
-5. `docs/architecture/cognitive-operations-vocabulary.md`  
+6. `docs/architecture/cognitive-operations-vocabulary.md`  
    Comprendre le vocabulaire cognitif qui évite de confondre geste, objet et intention.
 
-6. `docs/architecture/20260606_bhe-be-weekly-synthesis.md`  
+7. `docs/architecture/20260606_bhe-be-weekly-synthesis.md`  
    Lire la synthèse des leçons BHE-BE : ce qui semble robuste et ce qui doit rester descriptif.
 
-7. `docs/architecture/20260618_author-discoverability-catalog.md`  
+8. `docs/architecture/20260618_author-discoverability-catalog.md`  
    Comprendre la tentative de rendre le système lisible depuis le point de vue auteur.
 
-8. `docs/architecture/20260618_representation-path-implementation-report.md`  
+9. `docs/architecture/20260618_representation-path-implementation-report.md`  
    Comprendre le prototype expérimental `RepresentationPath`, son périmètre et ses limites.
 
-9. `docs/architecture/20260622_author-discovery-playground-v0-report.md`  
+10. `docs/architecture/20260622_author-discovery-playground-v0-report.md`  
    Comprendre la première matérialisation manipulable de l’expérience auteur.
 
-10. `docs/architecture/20260623_author-intent-routing-survey.md`  
+11. `docs/architecture/20260623_author-intent-routing-survey.md`  
     Comprendre la structure émergente du playground : Self-routing, Clarification-routing et Hybrid.
 
-11. `docs/architecture/20260622_compare-clarification-path-report.md`  
+12. `docs/architecture/20260622_compare-clarification-path-report.md`  
     Comprendre comment une intention auteur large comme `Compare` devient une question de clarification plutôt qu’un chemin unique.
 
-12. `docs/architecture/20260623_reflect-clarification-path-report.md`  
+13. `docs/architecture/20260623_reflect-clarification-path-report.md`  
     Comprendre comment `Reflect` suit le même modèle de clarification, mais peut router vers des chemins réflexifs, inférentiels ou situés.
 
-13. `docs/architecture/20260623_produce-clarification-path-report.md`  
+14. `docs/architecture/20260623_produce-clarification-path-report.md`  
     Comprendre pourquoi `Produce` n’est pas une destination BHE et comment la question `What kind of production is expected?` route vers des chemins existants.
 
-14. `docs/architecture/20260622_real-bhe-path-validation-report.md`  
+15. `docs/architecture/20260623_authoring-route-realization-report.md`  
+    Comprendre le niveau `Route Realization` : une route doit être découvrable par l’auteur et réellement connectée au système BHE pour compter comme complète.
+
+16. `docs/architecture/20260623_first-complete-route-realization-report.md`  
+    Comprendre la première route complète : `Compare -> Categories -> ClassificationSet`.
+
+17. `docs/architecture/20260623_second-complete-route-realization-report.md`  
+    Comprendre la deuxième route complète : `Compare -> Before / After Forms -> TransformationSet`.
+
+18. `docs/architecture/20260623_memorization-typing-recall-renderer-report.md`  
+    Comprendre la troisième route complète : `Produce -> Recalled Target -> MemorizationTypingRecall`.
+
+19. `docs/architecture/20260623_reflective-selection-renderer-report.md`  
+    Comprendre la quatrième route complète : `Reflect -> Strategies -> Reflect Through Selection -> completed`.
+
+20. `docs/architecture/20260623_apply-completion-conditions-investigation.md`  
+    Comprendre la frontière actuelle : `Apply Through Situated Task` exige une évidence située, pas seulement une réponse soumise.
+
+21. `docs/architecture/20260622_real-bhe-path-validation-report.md`  
     Comprendre jusqu’où les chemins authoring atteignent réellement le moteur BHE aujourd’hui.
 
-15. `docs/architecture/20260623_completed-path-spike-report.md`  
+22. `docs/architecture/20260623_completed-path-spike-report.md`  
     Comprendre le pont minimal vers `BHEResult.completed` pour les interactions non correctives.
 
-16. `docs/architecture/20260618_representation-recipes-exploration.md`  
+23. `docs/architecture/20260618_representation-recipes-exploration.md`  
    Comprendre pourquoi une couche intermédiaire est utile mais encore partielle.
 
-17. `docs/architecture/20260605_boost-english-corpus-cartography.md`  
+24. `docs/architecture/20260605_boost-english-corpus-cartography.md`  
     Voir le terrain réel : le corpus Boost’English qui force les questions d’architecture.
 
 Lecture complémentaire utile selon chantier :
@@ -290,7 +324,7 @@ Lecture complémentaire utile selon chantier :
 - Pour renderers/evaluators : `docs/reports/return-loop-architecture-synthesis.md`, `docs/reports/evaluators-comparative-analysis.md`, `docs/reports/dom-renderers-comparative-analysis.md`.
 - Pour typing : `docs/reports/typing-gesture-cognitive-operations-comparison.md`.
 - Pour drag-drop : `docs/reports/drag-drop-generalization-arbitration.md`.
-- Pour authoring : `docs/architecture/20260618_authoring-thinking-in-english.md`, `docs/architecture/20260618_catalog-application_thinking-in-english.md`, `docs/architecture/20260622_explore-before-the-rule-orchestration-path-report.md`, `docs/architecture/20260623_playground-routing-visualization-report.md`, `docs/architecture/20260623_reflect-investigation.md` et `docs/architecture/20260623_produce-investigation.md`.
+- Pour authoring : `docs/architecture/20260618_authoring-thinking-in-english.md`, `docs/architecture/20260618_catalog-application_thinking-in-english.md`, `docs/architecture/20260622_explore-before-the-rule-orchestration-path-report.md`, `docs/architecture/20260623_playground-routing-visualization-report.md`, `docs/architecture/20260623_reflect-investigation.md`, `docs/architecture/20260623_produce-investigation.md`, `docs/architecture/20260623_classify-investigation.md`, `docs/architecture/20260623_notice-investigation.md` et `docs/architecture/20260623_apply-investigation.md`.
 
 ## Concepts aujourd’hui stabilisés
 
@@ -313,9 +347,15 @@ Les éléments suivants semblent relativement établis dans l’état documentai
 - `Reflect Clarification` comme extension du même pattern : `Reflect` demande `What are learners reflecting on?` avant de router vers sélection, typing, inférence ou tâche située.
 - `Produce Clarification` comme troisième confirmation : `Produce` demande `What kind of production is expected?` et peut router vers rappel, GapFill, Transformation, Inference, Reflect ou Apply.
 - `Author Intent Routing` comme structure émergente du playground : certaines intentions sont Self-routing, d’autres Clarification-routing, d’autres Hybrid.
-- Le schéma authoring actuel se formule prudemment comme `Author Intent -> optional clarification -> PedagogicalUse -> RepresentationPath / AuthorOrchestrationPath -> BHE`.
+- Le schéma authoring actuel se formule prudemment comme `Author Intent -> Routing behavior -> Clarification when needed -> PedagogicalUse -> RepresentationPath / AuthorOrchestrationPath -> BHE carrier + UserInput + result policy -> Renderer / evaluator / completion helper / feedback -> Route Realization -> Corpus validation`.
+- `Route Realization` comme niveau authoring désormais utile pour distinguer une route conceptuellement comprise d’une route réellement connectée au système.
 - Le chemin `completed` non correctif est désormais viable : `UserInput -> createCompletedResultFromUserInput -> BHEResult.completed -> FeedbackData.completed`.
-- La validation récente montre que certains chemins authoring atteignent déjà le moteur réel : `Categories -> ClassificationSet` et `Before / After Forms -> TransformationSet`.
+- Quatre routes authoring atteignent désormais une chaîne complète :
+  - `Compare -> Categories -> ClassificationSet`.
+  - `Compare -> Before / After Forms -> TransformationSet`.
+  - `Produce -> Recalled Target -> MemorizationTypingRecall`.
+  - `Reflect -> Strategies -> Reflect Through Selection -> completed`.
+- Le statut de réalisation courant du playground est `exists completely: 4`, `partially exists: 0`, `missing pieces: 1`.
 
 ## Questions encore ouvertes
 
@@ -328,10 +368,12 @@ Les sujets suivants restent visiblement en exploration :
 - Comment passer d’un usage pédagogique à une représentation BHE sans “recette” trop mécanique.
 - Où placer les usages non évaluatifs : dans les types existants, via conventions, ou via nouveaux patterns.
 - Comment exposer `completed` comme résultat légitime sans le confondre avec une réussite évaluative.
-- Où doit vivre l’UI de sélection réflexive neutre : renderer général, renderer spécialisé, authoring, ou découplage plus clair entre renderer et evaluator.
+- Comment maintenir la sélection réflexive neutre après le renderer spécialisé : faut-il rester spécialisé, généraliser prudemment, ou clarifier davantage le contrat renderer/evaluator.
 - Quelle interface d’édition permettrait de choisir entre interaction shape, intention, opération cognitive et résultat attendu.
 - Comment représenter les intentions Hybrid sans forcer tous les intents à se comporter comme des chemins directs.
 - Comment poursuivre la clarification auteur pour des intentions larges comme Compare, Reflect et Produce sans créer des `CompareThrough...`, `ReflectThrough...` ou `ProduceSet` stabilisés trop tôt.
+- Comment traiter `Apply Through Situated Task` sans mentir sur la validation : la frontière actuelle est `situated response -> evidence of use -> BHEResult`.
+- Quel modèle minimal d’évidence située permettrait de dire qu’une réponse située a réellement fonctionné : pair, enseignant, apprenant, système, action observée ou combinaison.
 - Si la lentille de contrat pédagogique — correctif, réflexif, diagnostic, exploratoire, pratique, assessment — doit rester une aide d’analyse authoring ou devenir un jour une structure plus formelle.
 - Quels concepts issus des explorations Moment / PedagogicalTransition / LearningSequence doivent rester descriptifs, et lesquels méritent un futur support structurel.
 - Comment maintenir l’équilibre entre helpers communs et renderers pédagogiquement spécialisés.
@@ -352,17 +394,56 @@ La structure émergente du playground peut maintenant se résumer ainsi :
 ```txt
 Author Intent
 ↓
-optional clarification
+Routing behavior
+↓
+Clarification when needed
 ↓
 PedagogicalUse
 ↓
 RepresentationPath / AuthorOrchestrationPath
 ↓
-BHE
+BHE carrier + UserInput + result policy
+↓
+Renderer / evaluator / completion helper / feedback
+↓
+Route Realization
+↓
+Corpus validation
 ```
 
 Les travaux du 22 et du 23 juin 2026 ont précisé cette direction. `Explore Before The Rule` semble être une orchestration auteur-visible plutôt qu’un nouveau concept core. `Compare`, `Reflect` et `Produce` sont désormais lus comme des intentions auteur non auto-routables qui demandent respectivement `What are learners comparing?`, `What are learners reflecting on?` et `What kind of production is expected?`. Le survey des intentions distingue trois familles visibles dans le playground : Self-routing, Clarification-routing et Hybrid.
 
-La validation récente a aussi mesuré le lien réel avec le moteur. Plusieurs chemins atteignent déjà des structures BHE complètes, notamment `Categories -> ClassificationSet`, `Before / After Forms -> TransformationSet` et `Recalled Target -> MemorizationTypingRecall`. Le spike `completed` a également validé un pont minimal vers `BHEResult.completed` et `FeedbackData.completed` pour les réponses non correctives. Le point encore ouvert n’est donc plus “BHE peut-il produire completed ?”, mais plutôt “où doit vivre l’UI neutre de sélection réflexive ?”.
+La validation récente a aussi mesuré le lien réel avec le moteur. Le playground possède désormais un niveau `Route Realization` qui distingue `exists completely`, `partially exists` et `missing pieces`. À la fin du premier cycle authoring, l’état observé est :
 
-Les prochains grands chantiers visibles sont donc moins dans l’ajout de primitives core que dans la découvrabilité, l’expérience auteur, la clarification des intentions larges et la validation des chemins de représentation. BHE semble entrer dans une phase où la question principale devient : comment permettre à un auteur de penser pédagogiquement tout en produisant des structures BHE cohérentes, sans transformer l’authoring en surcouche opaque ou en nouvelle architecture prématurée. Le playground n’est plus seulement une démonstration : il devient progressivement une carte de routage entre langage auteur et structures BHE existantes.
+```txt
+exists completely: 4
+partially exists: 0
+missing pieces: 1
+```
+
+Les quatre routes complètes sont :
+
+```txt
+Compare -> Categories -> ClassificationSet
+Compare -> Before / After Forms -> TransformationSet
+Produce -> Recalled Target -> MemorizationTypingRecall
+Reflect -> Strategies -> Reflect Through Selection -> completed
+```
+
+Ces routes ne prouvent pas seulement que le core peut représenter des activités. Elles montrent que l’auteur peut désormais suivre un chemin lisible depuis une intention, une clarification éventuelle, un PedagogicalUse, un RepresentationPath, une structure BHE, une entrée utilisateur, un renderer/evaluator ou helper de completion, puis un résultat et un feedback.
+
+Le spike `completed`, puis le renderer de sélection réflexive, ont déplacé une ancienne incertitude : BHE peut produire un vrai `BHEResult.completed` et un `FeedbackData.completed` pour des réponses non correctives. Le point ouvert n’est donc plus “BHE peut-il produire completed ?”.
+
+La frontière actuelle est plutôt :
+
+```txt
+situated response
+↓
+evidence of use
+↓
+BHEResult
+```
+
+Autrement dit, le problème principal restant concerne `Apply Through Situated Task`. BHE peut probablement porter une réponse située ou une tentative complétée, mais il ne faut pas faire semblant qu’une réponse située est réussie simplement parce qu’elle a été saisie. La question la plus importante devient : comment exprimer honnêtement l’évidence d’une réussite située ?
+
+Les prochains grands chantiers visibles sont donc moins dans l’ajout de primitives core que dans la découvrabilité, l’expérience auteur, la clarification des intentions hybrides, la maintenance des routes réalisées et l’exploration prudente de l’évidence située. BHE semble entrer dans une phase où la question principale devient : comment permettre à un auteur de penser pédagogiquement tout en découvrant des structures BHE cohérentes, sans transformer l’authoring en surcouche opaque ou en nouvelle architecture prématurée. Le playground n’est plus seulement une démonstration : il est devenu une surface de routage entre langage auteur, structures BHE existantes et degré réel de réalisation.
